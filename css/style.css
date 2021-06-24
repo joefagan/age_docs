@@ -1,0 +1,33 @@
+h1{
+    color:rgb(12, 52, 112);
+}
+
+body{
+    background-color: rgb(240,240,240);
+    color: rgb(10, 10, 10);
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: large;
+}
+
+tbody p {
+    padding-top: 12px;
+    padding-bottom: 12px;
+    text-align: left;
+    background-color: #5f6160;
+    color: white;
+
+}
+
+table {
+    border-collapse: collapse;
+    border: 0px solid rgb(200, 200, 200);
+    letter-spacing: 0px;
+    font-family: sans-serif;
+    font-size: .8rem;
+}
+
+table p {
+    background-color: rgb(194,194,194);
+    border: 0px;
+    margin: 0px;
+}

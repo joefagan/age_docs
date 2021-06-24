@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Apache AGE Advanced Cypher Queries</title>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+<h1>Advanced Cypher Queries</h1>
+<p>All queries so far have followed the same pattern: a SELECT clause followed by a single Cypher call in the FROM clause. However, a Cypher query can be used in many other ways. This section highlights some more advanced ways of using the Cypher call within a more complex SQL/Cypher Hybrid Query.</p>
+<h2>CTE Clause</h2>
+<p>There are no restrictions to using Cypher with CTEs.</p>
+<p>Query:</p>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>WITH graph_query as (    SELECT *        FROM cypher('graph_name', $$        MATCH (n)        RETURN n.name, n.age    $$) as (name agtype, age agtype) )SELECT * FROM graph_query;</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p>Results:</p>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>name</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>age</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>‘Andres’</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>36</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>‘Tobias’</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>25</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>‘Peter’</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>35</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1">
+        <p>3 row(s) returned</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h2>Join Clause</h2>
+<p>A Cypher query can be part of a JOIN clause.</p>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>Developers NoteCypher queries using the <a href="#h.vo9azwq6syoh">CREATE</a>, <a href="#h.b68a3epvvz6i">SET</a>, <a href="#h.qvxkvmd3206e">REMOVE</a> clauses cannot be used in sql queries with Joins, as they affect the Postgres transaction system. One possible solution is to protect the query with CTEs. See the subsection <a href="#h.l1aulss2l2ks">Using CTEs with CREATE, REMOVE, and SET</a> for a solution to this problem.</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p>Query:</p>
+<table>
+  <tbody>
+    <tr>
+      <td > -->
+        <p>SELECT id,</p>
+        <p>    graph_query.name = t.name as names_match,</p>
+        <p>    graph_query.age = t.age as ages_matchFROM schema_name.sql_person AS t</p>
+        <p>JOIN cypher('graph_name', $$        MATCH (n:Person)        RETURN n.name, n.age, id(n) $$) as graph_query(name agtype, age agtype, id agtype)ON t.person_id = graph_query.id</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p>Results:</p>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>id</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>names_match</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>ages_match</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>1</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>True</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>True</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>2</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>False</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>True</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>3</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>True</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>False</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3" rowspan="1">
+        <p>3 row(s) returned</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h3>Using CTEs with CREATE, REMOVE, and SET</h3>
+<p>Prior to the rest of the SQL query running, all CTEs are run and the results are cached and then referenced. This functionality makes it safe to run an Cypher query with a CREATE, SET, or REMOVE clause in the CTE and join to other tables or cypher queries.</p>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>WITH graph_query_1 as (    SELECT *    FROM cypher('graph_name', $$        MATCH (n:Person), (m:Person)</p>
+        <p>        WHERE n.name = 'Tobias' AND m.name = 'Peter'        CREATE (n)-[:FRIEND {id: n.name + '-&gt;' + m.name}]-&gt;(m)        RETURN m.name    $$) as (Tobias_new_friend agtype) ),</p>
+        <p>graph_query_2 as (</p>
+        <p>    SELECT *    FROM cypher('graph_name', $$        MATCH (n:Person)-[:FRIEND]-&gt;(m:Person)</p>
+        <p>        WHERE n.name = 'Tobias' AND m.name &lt;&gt; 'Peter'        RETURN m.name    $$) as (Tobias_old_friend agtype)</p>
+        <p>)SELECT * FROM graph_query_1, graph_query_2;</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p>Results:</p>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>Tobias_new_friend</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>Tobias_old_friend</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>'Peter'</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>‘Andres’</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1">
+        <p>1 row(s) returned</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h2>Using Cypher with expressions</h2>
+<p>Cypher cannot be used in an expression, the query must exists in the FROM clause of a query. However, if the cypher query is placed in a Subquery, it will behave as any SQL style query.</p>
+<h3>Using Cypher with '='</h3>
+<p>When writing a cypher query that is known to return 1 column and 1 row, the '=' comparison operator may be used.</p>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>SELECT t.name FROM schema_name.sql_person AS twhere t.name = (    SELECT a    FROM cypher('graph_name', $$              MATCH (v)        RETURN v.name    $$) as (name varchar(50))    ORDER BY name    LIMIT 1);</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p>Results:</p>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>name</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>age</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>‘Andres’</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>36</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1">
+        <p>3 row(s) returned</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h3>Working with Postgres's IN Clause</h3>
+<p>When writing a cypher query that is known to return 1 column, but may have multiple rows. The IN operator may be used.</p>
+<p>Query:</p>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>SELECT t.name, t.age FROM schema_name.sql_person as t</p>
+        <p>where t.name in (</p>
+        <p>    SELECT *</p>
+        <p>    FROM cypher('graph_name', $$</p>
+        <p>        MATCH (v:Person)</p>
+        <p>        RETURN v.name </p>
+        <p>    $$) as (a agtype));</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p>Results:</p>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>name</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>age</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>‘Andres’</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>36</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>‘Tobias’</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>25</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>‘Peter’</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>35</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1">
+        <p>3 row(s) returned</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h3>Working with Postgres EXISTS Clause</h3>
+<p>When writing a cypher query that may have more than 1 column and row returned. The EXISTS operator may be used.</p>
+<p>Query:</p>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>SELECT t.name, t.ageFROM schema_name.sql_person as tWHERE EXISTS (    SELECT *    FROM cypher('graph_name', $$           MATCH (v:Person)        RETURN v.name, v.age    $$) as (name agtype, age agtype)    WHERE name = t.name AND age = t.age );</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p>Results:</p>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>name</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>age</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>‘Andres’</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>36</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>‘Tobias’</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>25</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="2" rowspan="1">
+        <p>3 row(s) returned</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<h2>Querying Multiple Graphs</h2>
+<p>There is no restriction to the number of graphs an SQL statement can query. Allowing users to query more than one graph at the same time.</p>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>SELECT graph_1.name, graph_1.age, graph_2.license_numberFROM cypher('graph_1', $$    MATCH (v:Person)    RETURN v.name, v.age $$) as graph_1(col_1 agtype, col_2 agtype, col_3 agtype)JOIN cypher('graph_2', $$    MATCH (v:Doctor)    RETURN v.name, v.license_number $$) as graph_2(name agtype, license_number agtype)ON graph_1.name = graph_2.name</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<p>Results:</p>
+<table>
+  <tbody>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>name</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>age</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>license_number</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="1" rowspan="1">
+        <p>‘Andres’</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>36</p>
+      </td>
+      <td colspan="1" rowspan="1">
+        <p>1234567890</p>
+      </td>
+    </tr>
+    <tr>
+      <td colspan="3" rowspan="1">
+        <p>3 row(s) returned</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+</body>
+</html>
