@@ -1,0 +1,3649 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Apache AGE Features</title>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+  <h1>Features</h1>
+  <h2>Graphs</h2>
+  <p>A graph consists of a set of vertices and edges, where each individual node and edge possesses a map of properties. A vertex is the basic object of a graph, that can exist independently of everything else in the graph. An edge creates a directed connection between two vertices.</p>
+  <h3>Create a Graph</h3>
+  <p>To create a graph, use the create_graph function, located in the ag_catalog namespace.</p>
+  <p>create_graph()</p>
+  <p>Syntax: create_graph(graph_name);</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>void</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>graph_name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Name of the graph to be created</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations</p>
+  <ul>
+    <li>This function will not return any results. However if there is not an error message the graph will be created.</li>
+    <li>Tables needed to set up the graph are automatically created.</li>
+  </ul>
+  <p>Example:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;ag_catalog.create_graph('graph_name');</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Delete a Graph</h3>
+  <p>To delete a graph, use the drop_graph function, located in the ag_catalog namespace.</p>
+  <p>drop_graph()</p>
+  <p>Syntax: drop_graph(graph_name, cascade);</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>void</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>graph_name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Name of the graph to be created</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>cascade</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>A boolean that will not drop the graph if any data remains in the graph.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>This function will not return any results. However if there is not an error message the graph will be created.</li>
+    <li>It is recommended to set the cascade option to true, otherwise everything in the graph must be manually dropped with SQL DDL commands.</li>
+  </ul>
+  <p>Example:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;ag_catalog.drop_graph('graph_name', true);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>A Cypher Graph vs A Postgres Namespace</h3>
+  <p>Cypher uses a Postgres namespace for every individual graph. It is recommended that no DML or DDL commands are executed in the namespace that is reserved for the graph.</p>
+  <h2>Data Types - An Introduction to agtype</h2>
+  <p>AGE uses a custom data type called agtype, which is the only data type returned by AGE. Agtype is a superset of Json and a custom implementation of JsonB.</p>
+  <h3>Simple Data Types</h3>
+  <h4>Null</h4>
+  <p>In Cypher, null&nbsp;is used to represent missing or undefined values. Conceptually, null&nbsp;means 'a missing unknown value' and it is treated somewhat differently from other values. For example getting a property from a vertex that does not have said property produces null. Most expressions that take null&nbsp;as input will produce null. This includes boolean expressions that are used as predicates in the WHERE&nbsp;clause. In this case, anything that is not true&nbsp;is interpreted as being false.&nbsp;null&nbsp;is not equal to null. Not knowing two values does not imply that they are the same value. So the expression null&nbsp;= null&nbsp;yields null&nbsp;and not true.</p>
+  <p>Input/Output Format</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;NULL $$) AS&nbsp;(null_result agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>A null will appear as an empty space.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>null_result</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1"></td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Agtype NULL vs Postgres NULL</p>
+  <h4>Integer</h4>
+  <p>The integer type stores whole numbers, i.e. numbers without fractional components. Integer data type is a 64-bit field that stores values between -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807. Attempts to store values outside of the allowed range will result in an error.</p>
+  <p>The type integer is the common choice, as it offers the best balance between range, storage size, and performance. The smallint type is generally only used if disk space is at a premium. The bigint type is designed to be used when the range of the integer type is insufficient.</p>
+  <p>Input/Output Format</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;1 $$) AS&nbsp;(int_result agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>int_result</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h4>Float</h4>
+  <p>The data type float is an inexact, variable-precision numeric type, conforming to the IEEE-754 Standard.</p>
+  <p>Inexact means that some values cannot be converted exactly to the internal format and are stored as approximations, so that storing and retrieving a value might show slight discrepancies. Managing these errors and how they propagate through calculations is the subject of an entire branch of mathematics and computer science and will not be discussed here, except for the following points:</p>
+  <ul>
+    <li>If you require exact storage and calculations (such as for monetary amounts), use the numeric type instead.</li>
+    <li>If you want to do complicated calculations with these types for anything important, especially if you rely on certain behavior in boundary cases (infinity, underflow), you should evaluate the implementation carefully.</li>
+    <li>Comparing two floating-point values for equality might not always work as expected.</li>
+  </ul>
+  <p>Values that are too large or too small will cause an error. Rounding might take place if the precision of an input number is too high. Numbers too close to zero that are not representable as distinct from zero will cause an underflow error.</p>
+  <p>In addition to ordinary numeric values, the floating-point types have several special values:</p>
+  <ul>
+    <li>Infinity</li>
+    <li>-Infinity</li>
+    <li>NaN</li>
+  </ul>
+  <p>These represent the IEEE 754 special values “infinity”, “negative infinity”, and “not-a-number”, respectively. When writing these values as constants in a Cypher command, you must put quotes around them and typecast them, for example SET x.float_value = '-Infinity'::float. On input, these strings are recognized in a case-insensitive manner.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Note IEEE754 specifies that NaN should not compare equal to any other floating-point value (including NaN). However, in order to allow floats to be sorted correctly, AGE evaluates ‘NaN’::float = ‘NaN’:float to true. See the section <a href="#h.3dsme7gtj4ch">Comparability and Equality</a>&nbsp;for more details.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Input/Output Format:</p>
+  <p>To use a float, denote a decimal value.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;1.0 $$) AS&nbsp;(float_result agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>float_result</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1.0</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h4>Numeric</h4>
+  <p>The type numeric can store numbers with a very large number of digits. It is especially recommended for storing monetary amounts and other quantities where exactness is required. Calculations with numeric values yield exact results where possible, e.g., addition, subtraction, multiplication. However, calculations on numeric values are very slow compared to the integer types, or to the floating-point type.</p>
+  <p>We use the following terms below: The precision&nbsp;of a numeric is the total count of significant digits in the whole number, that is, the number of digits to both sides of the decimal point. The scale&nbsp;of a numeric is the count of decimal digits in the fractional part, to the right of the decimal point. So the number 23.5141 has a precision of 6 and a scale of 4. Integers can be considered to have a scale of zero.</p>
+  <p>Without any precision or scale creates a column in which numeric values of any precision and scale can be stored, up to the implementation limit on precision. A column of this kind will not coerce input values to any particular scale, whereas numeric columns with a declared scale will coerce input values to that scale. (The SQL standard requires a default scale of 0, i.e., coercion to integer precision. We find this a bit useless. If you're concerned about portability, always specify the precision and scale explicitly.)</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Note The maximum allowed precision when explicitly specified in the type declaration is 1000; NUMERIC without a specified precision is subject to the limits described in Table 8.2.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>If the scale of a value to be stored is greater than the declared scale of the column, the system will round the value to the specified number of fractional digits. Then, if the number of digits to the left of the decimal point exceeds the declared precision minus the declared scale, an error is raised.</p>
+  <p>Numeric values are physically stored without any extra leading or trailing zeroes. Thus, the declared precision and scale of a column are maximums, not fixed allocations. (In this sense the numeric type is more akin to varchar(n) than to char(n).) The actual storage requirement is two bytes for each group of four decimal digits, plus three to eight bytes overhead.</p>
+  <p>In addition to ordinary numeric values, the numeric type allows the special value NaN, meaning “not-a-number”. Any operation on NaN yields another NaN. When writing this value as a constant in an SQL command, you must put quotes around it, for example UPDATE table SET x = 'NaN'. On input, the string NaN is recognized in a case-insensitive manner.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Note In most implementations of the "not-a-number" concept, NaN is not considered equal to any other numeric value (including NaN). However, in order to allow floats to be sorted correctly, AGE evaluates ‘NaN’::numeric = ‘NaN’:numeric to true. See the section <a href="#h.3dsme7gtj4ch">Comparability and Equality</a>&nbsp;for more details.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>When rounding values, the numeric type rounds ties away from zero, while (on most machines) the real and double precision types round ties to the nearest even number. For example:</p>
+  <p>Input/Output Format:</p>
+  <p>When creating a numeric data type, the ‘::numeric’ data annotation is required.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;1.0::numeric $$) AS&nbsp;(numeric_result agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>numeric_result</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1.0::numeric</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h4>Bool</h4>
+  <p>AGE provides the standard Cypher type boolean. The boolean type can have several states: “true”, “false”, and a third state, “unknown”, which is represented by the Agtype null value.</p>
+  <p>Boolean constants can be represented in Cypher queries by the keywords TRUE, FALSE, and NULL.</p>
+  <p>Note that the parser automatically understands that TRUE and FALSE are of type boolean, but this is not so for NULL because that can have any type. So in some contexts you might have to cast NULL to boolean explicitly, for example NULL::boolean. Conversely, the cast can be omitted from a string-literal Boolean value in contexts where the parser can deduce that the literal must be of type boolean.</p>
+  <p>Input/Output Format</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;TRUE $$) AS&nbsp;(boolean_result agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Unlike Postgres, AGE’s boolean outputs as the full word, ie. true and false as opposed to t and f.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>boolean_result</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>true</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h4>String</h4>
+  <p>Agtype strings String literals can contain the following escape sequences:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Escape Sequence</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Character</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>\t</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Tab</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>\b</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Backspace</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>\n</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Newline</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>\r</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Carriage Return</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>\f</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Form Feed</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>\’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Single Quote</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>\”</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Double Quote</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>\\</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Backslash</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>\uXXXX</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Unicode UTF-16 code point (4 hex digits must follow the \u)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Input/Output Format</p>
+  <p>Use single (‘) quotes to identify a string. The output will use double (“) quotes.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN ‘This is a string’ $$) AS&nbsp;(string_result agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>string_result</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>“This is a string”</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Composite Data Types</h3>
+  <h4>List</h4>
+  <p>All examples will use the <a href="#h.61g87t1b908v">WITH</a>&nbsp;clause and <a href="#h.a8dh3jonzaxn">RETURN</a>&nbsp;clause.</p>
+  <p>Lists in general</p>
+  <p>A literal list is created by using brackets and separating the elements in the list with commas.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;WITH&nbsp;[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as&nbsp;lst &nbsp; &nbsp;RETURN&nbsp;lst $$) AS&nbsp;(lst agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>lst</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>NULL in a List</p>
+  <p>A list can hold the value null, unlike when a null is an independent value, it will appear as the word ‘null’ in a list</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;WITH&nbsp;[null] as&nbsp;lst &nbsp; &nbsp;RETURN&nbsp;lst $$) AS&nbsp;(lst agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>lst</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>[null]</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Access Individual Elements</p>
+  <p>To access individual elements in the list, we use the square brackets again. This will extract from the start index and up to but not including the end index.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;WITH&nbsp;[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as&nbsp;lst &nbsp; &nbsp;RETURN&nbsp;lst[3] $$) AS&nbsp;(element agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>element</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>3</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Map Elements in Lists</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; WITH&nbsp;[0, {key: 'key_value'}, 2, 3, 4, 5, 6, 7, 8, 9, 10] as&nbsp;lst &nbsp; &nbsp;RETURN&nbsp;lst $$) AS&nbsp;(map_value&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>map_value</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>[0, {"key": "key_value"}, 2, 3, 4, 5, 6, 7, 8, 9, 10]</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Accessing Map Elements in Lists</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; WITH&nbsp;[0, {key: 'key_value'}, 2, 3, 4, 5, 6, 7, 8, 9, 10] as&nbsp;lst &nbsp; &nbsp;RETURN&nbsp;lst[1].key $$) AS&nbsp;(map_value&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>map_value</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>“key_value”</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Negative Index Access</p>
+  <p>You can also use negative numbers, to start from the end of the list instead.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;WITH&nbsp;[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as&nbsp;lst &nbsp; &nbsp;RETURN&nbsp;lst[-3] $$) AS&nbsp;(element&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>element</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>8</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Index Ranges</p>
+  <p>Finally, you can use ranges inside the brackets to return ranges of the list.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;WITH&nbsp;[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as&nbsp;lst &nbsp; &nbsp;RETURN&nbsp;lst[0..3] $$) AS&nbsp;(element&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>element</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>[0, 1, 2]</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Negative Index Ranges</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;WITH&nbsp;[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as&nbsp;lst &nbsp; &nbsp;RETURN&nbsp;lst[0..-5] $$) AS&nbsp;(lst&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>lst</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>[0, 1, 2, 3, 4, 5]</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Positive Slices</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;WITH&nbsp;[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as&nbsp;lst &nbsp; &nbsp;RETURN&nbsp;lst[..4] $$) AS&nbsp;(lst&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>lst</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>[0, 1, 2, 3]</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Negative Slices</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;WITH&nbsp;[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as&nbsp;lst &nbsp; &nbsp;RETURN&nbsp;lst[-5..] $$) AS&nbsp;(lst&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>lst</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>[6, 7, 8, 9, 10]</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Out-of-bound slices are simply truncated, but out-of-bound single elements return null.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;WITH&nbsp;[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as&nbsp;lst &nbsp; &nbsp;RETURN&nbsp;lst[15] $$) AS&nbsp;(element&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>element</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>[0, 1, 2, 3]</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;WITH&nbsp;[0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10] as&nbsp;lst &nbsp; &nbsp;RETURN&nbsp;lst[5..15] $$) AS&nbsp;(element&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>element</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>[5, 6, 7, 8, 9, 10]</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h4>Map</h4>
+  <p>Maps can be constructed using Cypher.</p>
+  <p>Literal Maps with Simple Data Types</p>
+  <p>You can construct a simple map with simple agtypes</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;WITH&nbsp;{int_key: 1, float_key: 1.0, numeric_key: 1::numeric, bool_key: true, string_key: 'Value'} as m</p>
+          <p>&nbsp; &nbsp; RETURN m $$) AS&nbsp;(m&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>m</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{"int_key": 1, "bool_key": true, "float_key": 1.0, "string_key": "Value", "numeric_key": 1::numeric}</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Literal Maps with Composite Data Types</p>
+  <p>A map can also contain Composite Data Types, i.e. lists and other maps.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;WITH&nbsp;{listKey: [{inner: 'Map1'}, {inner: 'Map2'}], mapKey: {i: 0}} as&nbsp;m &nbsp; &nbsp;RETURN&nbsp;m $$) AS&nbsp;(m agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>m</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{"mapKey": {"i": 0}, "listKey": [{"inner": "Map1"}, {"inner": "Map2"}]}</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Property Access of a map</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;WITH&nbsp;{int_key: 1, float_key: 1.0, numeric_key: 1::numeric, bool_key: true, string_key: 'Value'} as&nbsp;m &nbsp; &nbsp;RETURN&nbsp;m.int_key $$) AS&nbsp;(int_key agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>int_key</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Accessing List Elements in Maps</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;WITH&nbsp;{listKey: [{inner: 'Map1'}, {inner: 'Map2'}], mapKey: {i: 0}} as m</p>
+          <p>&nbsp; &nbsp; RETURN m.listKey[0] $$) AS&nbsp;(m&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>m</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{"inner": "Map1"}</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Simple Entities</h3>
+  <p>An entity has a unique, comparable identity which defines whether or not two entities are equal.</p>
+  <p>An entity is assigned a set of properties, each of which are uniquely identified in the set by the irrespective property keys.</p>
+  <p>GraphId</p>
+  <p>Simple entities are assigned a unique graphid. A graphid is a unique composition of the entity's label id and a unique sequence assigned to each label. Note that there will be overlap in ids when comparing entities from different graphs.</p>
+  <p>Labels</p>
+  <p>A label is an identifier that classifies vertices and edges into certain categories.</p>
+  <ul>
+    <li>Edges are required to have a label, but vertices do not.</li>
+    <li>The names of labels between vertices and edges cannot overlap.</li>
+  </ul>
+  <p>See <a href="#h.vo9azwq6syoh">CREATE</a>&nbsp;clause for information about how to make entities with labels.</p>
+  <p>Properties</p>
+  <p>Both vertices and edges may have properties. Properties are attribute values, and each attribute name should be defined only as a string type.</p>
+  <h4>Vertex</h4>
+  <ul>
+    <li>A vertex is the basic entity of the graph, with the unique attribute of being able to exist in and ofitself.</li>
+    <li>A vertex may be assigned a label.</li>
+    <li>A vertex &nbsp;may have zero or more outgoing edges.</li>
+    <li>A vertex may have zero or more incoming edges.</li>
+  </ul>
+  <p>Data Format:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Attribute Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Id</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>graphid for this vertex</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>label</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Name of the label this vertex has</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>properties</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Properties associated with this vertex</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{id:1; label: ‘label_name’; properties: {prop1: value1, prop2: value2}}::vertex</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Type Casting a Map to a Vertex</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT * FROM cypher('graph_name', $$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WITH {id: 0, label: "label_name", properties: {i: 0}}::vertex as v &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RETURN v $$) AS (v agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>v</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{"id": 0, "label": "label_name", "properties": {"i": 0}}::vertex</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h4>Edge</h4>
+  <p>An edge is an entity that encodes a directed connection between exactly two nodes, thesource node and the target node. An outgoing edge is a directed relationship from the point of view of its source node. An incoming edge is a directed relationship from the point of view of its target node. An edge is assigned exactly one edge type.</p>
+  <p>Data Format</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Attribute Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>id</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>graphid for this edge</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>startid</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>graphid for the incoming edge</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>endid</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>graphid for the outgoing edge</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>label</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Name of the label this edge has</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>properties</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Properties associated with this edge</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Output:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{id: 3; startid: 1; endid: 2; label: ‘edge_label’ properties{prop1: value1, prop2: value2}}::edge</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Type Casting a Map to an Edge</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT * FROM cypher('graph_name', $$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WITH {id: 2, start_id: 0, end_id: 1, label: "label_name", properties: {i: 0}}::edge as e &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RETURN e $$) AS (e agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>v</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{"id": 2, "label": "label_name", "end_id": 1, "start_id": 0, "properties": {"i": 0}}::edge</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Composite Entities</h3>
+  <h4>Path</h4>
+  <p>A path is a series of alternating vertices and edges. A path must start with a vertex, and have at least one edge.</p>
+  <p>Type Casting a Map to a Path</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT * FROM cypher('graph_name', $$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;WITH [{id: 0, label: "label_name_1", properties: {i: 0}}::vertex,</p>
+          <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; {id: 2, start_id: 0, end_id: 1, label: "edge_label", properties: {i: 0}}::edge,</p>
+          <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;{id: 1, label: "label_name_2", properties: {}}::vertex</p>
+          <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;]::path as p &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RETURN p $$) AS (p agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The result is formatted to improve readability</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>p</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>[</p>
+          <p>&nbsp; &nbsp; {"id": 0, "label": "label_name_1", "properties": {"i": 0}}::vertex,</p>
+          <p>&nbsp; &nbsp; {"id": 2, "label": "edge_label", "end_id": 1, "start_id": 0, "properties": {"i": 0}}::edge,</p>
+          <p>&nbsp; &nbsp; {"id": 1, "label": "label_name_2", "properties": {}}::vertex</p>
+          <p>]::path</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h2>Comparability, Equality, Orderability and Equivalence</h2>
+  <p>AGE&nbsp;already has good semantics for equality within the primitive types (booleans, strings,integers, and floats) and maps. Furthermore, Cypher has good semantics for comparability and orderability for integers, floats, and strings, within each of the types. However, working with values of different types deviates from Postgres’ defined logic and the openCypher specification:</p>
+  <ul>
+    <li>Comparability between values of different types is defined. This deviation is particularly pronounced when it occurs as part of the evaluation of predicates (in WHERE).</li>
+    <li>ORDER BY&nbsp;will not fail if the values passed to it have different types.</li>
+  </ul>
+  <p>The underlying conceptual model is complex and sometimes inconsistent. This leads to an unclear relationship between comparison operators, equality, grouping, and ORDER BY:</p>
+  <ul>
+    <li>Comparability and orderability are aligned with each other consistently, as all types can be ordered and compared.</li>
+    <li>The difference between equality and equivalence, as exposed by IN, =, DISTINCT, and grouping, in AGE is limited to testing two instances of the value null&nbsp;to each other</li>
+  </ul>
+  <ul>
+    <li>In equality, null = null is null.</li>
+    <li>In equivalence, used by DISTINCT and when grouping values, two null values are always treated as being the same value.</li>
+    <li>However, equality treats null values differently if they are an element of a list or a map value.</li>
+  </ul>
+  <h3>Concepts</h3>
+  <p>The openCypher specification features four distinct concepts related to equality and ordering:</p>
+  <p>Comparability</p>
+  <p>Comparability is used by the inequality operators (&gt;, &lt;, &gt;=, &lt;=), and defines the underlying semantics of how to compare two values.</p>
+  <p>Equality</p>
+  <p>Equality is used by the equality operators (=, &lt;&gt;), and the list membership operator (IN). It defines the underlying semantics to determine if two values are the same in these contexts. Equality is also used implicitly by literal maps in node and relationship patterns, since such literal maps are merely a shorthand notation for equality predicates.</p>
+  <p>Orderability</p>
+  <p>Orderability is used by the ORDER BY clause, and defines the underlying semantics of how to order values.</p>
+  <p>Equivalence</p>
+  <p>Equivalence is used by the DISTINCT modifier and by grouping in projection clauses (WITH,RETURN), and defines the underlying semantics to determine if two values are the same in these contexts.</p>
+  <h3>Comparability and equality</h3>
+  <p>Comparison operators need to function as one would expect comparison operators to function - equality and comparability. But, at the same time, they need to allow the sorting of column data - equivalence and orderability.</p>
+  <p>Unfortunately, it may not be possible to implement separate comparison operators for equality and comparison operations, and, equivalence and orderability operations, in PostgreSQL, for the same query. So we prioritize equivalence and orderability over equality and comparability to allow for ordering of output data.</p>
+  <p>Comparability</p>
+  <p>Comparability is defined between any pair of values, as specified below.</p>
+  <ul>
+    <li>Numbers</li>
+  </ul>
+  <ul>
+    <li>Numbers of different types (excluding NaN values and the Infinities) are compared to each other as if both numbers would have been coerced to arbitrary precision big decimals(currently outside the Cypher type system) before comparing them with each other numerically in ascending order.</li>
+    <li>Comparison to any value that is not also Number follows the rules of orderability.</li>
+    <li>Floats don’t have the required precision to represent all of the whole numbers in the range of agtype integer and agtype numeric. When casting an integer or numeric agtype to a float, unexpected results can occur when casting values in the high and low range</li>
+    <li>Integers</li>
+  </ul>
+  <ul>
+    <li>Integers are compared numerically in ascending order.</li>
+  </ul>
+  <ul>
+    <li>Floats</li>
+  </ul>
+  <ul>
+    <li>Floats (excluding NaN values and the Infinities) are compared numerically in ascending order.</li>
+    <li>Positive infinity is of type FLOAT, equal to itself and greater than any other number, except NaN values.</li>
+    <li>Negative infinity is of type FLOAT, equal to itself and less than any other number.</li>
+    <li>NaN values are comparable to each and greater than any other float value.</li>
+  </ul>
+  <ul>
+    <li>Numeric</li>
+  </ul>
+  <ul>
+    <li>Numerics are compared numerically in ascending order.</li>
+  </ul>
+  <ul>
+    <li>Booleans</li>
+  </ul>
+  <ul>
+    <li>Booleans are compared such that false is less than true.</li>
+    <li>Comparison to any value that is not also a boolean follows the rules of orderability.</li>
+  </ul>
+  <ul>
+    <li>Strings</li>
+  </ul>
+  <ul>
+    <li>Strings are compared in dictionary order, i.e. characters are compared pairwise in ascending order from the start of the string to the end. Characters missing in a shorter string are considered to be less than any other character. For example, 'a' &lt; 'aa'.</li>
+    <li>Comparison to any value that is not also a string follows the rules of orderability.</li>
+  </ul>
+  <ul>
+    <li>Lists</li>
+  </ul>
+  <ul>
+    <li>Lists are compared in sequential order, i.e. list elements are compared pairwise in ascending order from the start of the list to the end. Elements missing in a shorter list are considered to be less than any other value (including null values). For example, [1] &lt; [1, 0]but also [1] &lt; [1, null].</li>
+    <li>Comparison to any value that is not also a list follows the rules of orderability.</li>
+  </ul>
+  <ul>
+    <li>Maps</li>
+  </ul>
+  <ul>
+    <li>The comparison order for maps is unspecified and left to implementations.</li>
+    <li>The comparison order for maps must align with the equality semantics outlined below. In consequence, any map that contains an entry that maps its key to a null value is incomparable. For example, {a: 1} &lt;= {a: 1, b: null} evaluates to null.</li>
+    <li>Comparison to any value that is not also a regular map follows the rules of orderability.</li>
+  </ul>
+  <p>Entities</p>
+  <ul>
+    <li>Vertices</li>
+  </ul>
+  <ul>
+    <li>The comparison order for vertices is based on the assigned graphid.</li>
+  </ul>
+  <ul>
+    <li>Edges</li>
+  </ul>
+  <ul>
+    <li>The comparison order for edges is based on the assigned graphid.</li>
+  </ul>
+  <ul>
+    <li>Paths</li>
+  </ul>
+  <ul>
+    <li>Paths are compared as if they were a list of alternating nodes and relationships of the path from the start node to the end node. For example, given nodes n1, n2, n3, and relationships r1and r2, and given that n1 &lt; n2 &lt; n3 and r1 &lt; r2, then the path p1 from n1 to n3 via r1 would be less than the path p2 to n1 from n2 via r2.</li>
+    <li>Expressed in terms of lists:</li>
+  </ul>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>p1 &lt; p2 &lt;=&gt; [n1, r1, n3] &lt; [n1, r2, n2] &lt;=&gt; n1 &lt; n1 || (n1 = n1 &amp;& [r1, n3] &lt; [r2, n2]) &lt;=&gt; false || (true &amp;& [r1, n3] &lt; [r2, n2])&lt;=&gt; [r1, n3] &lt; [r2, n2] &lt;=&gt; r1 &lt; r2 || (r1 = r2 &amp;& n3 &lt; n2) &lt;=&gt; true || (false &amp;& false) &lt;=&gt; true</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <ul>
+    <li>Comparison to any value that is not also a path will return false.</li>
+  </ul>
+  <ul>
+    <li>NULL</li>
+  </ul>
+  <ul>
+    <li>null is incomparable with any other value (including other null values.)</li>
+  </ul>
+  <p>Orderability Between different Agtypes</p>
+  <p>The ordering of different Agtype, when using &lt;, &lt;=, &gt;, &gt;= from smallest value to largest value is:</p>
+  <ol>
+    <li>Edge</li>
+    <li>Path</li>
+    <li>Map</li>
+    <li>Vertex</li>
+    <li>Edge</li>
+    <li>Array</li>
+    <li>String</li>
+    <li>Bool</li>
+    <li>Numeric, Integer, Float</li>
+    <li>NULL</li>
+  </ol>
+  <p>Note: This is subject to change in future releases.</p>
+  <h2>Operator Precedence</h2>
+  <p>Operator precedence in AGE is shown below:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Precedence</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Operator</p>
+        </td>
+        <td colspan="1" rowspan="1"></td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>.</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Property Access</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="2">
+          <p>2</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>[]</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Map and List Subscripting</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>()</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Function Call</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="3">
+          <p>3</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>STARTS WITH</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Case-sensitive prefix searching on strings</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>ENDS WITH</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Case-sensitive suffix searching on strings</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>CONTAINS</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Case-sensitive inclusion searching on strings</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>4</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>-</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Unary Minus</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="3">
+          <p>5</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>IN</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Checking if an element exists in a list</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>IS NULL</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Checking a value is NULL</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>IS NOT NULL</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Checking a value is not NULL</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>6</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>^</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Exponentiation</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>7</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>* / %</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Multiplication, division and remainder</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>8</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>+ -</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Addition and Subtraction</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="3">
+          <p>9</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>= &lt;&gt;</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>For relational = and ≠ respectively</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>&lt; &lt;=</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>For relational &lt; and ≤ respectively</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>&gt; &gt;=</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>For relational &gt; and ≥ respectively</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>10</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>NOT</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Logical NOT</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>11</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>AND</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Logical AND</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>12</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>OR</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Logical OR</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h2>The AGE Cypher Query Format</h2>
+  <p>Cypher queries are constructed using a function called cypher in ag_catalog which returns a Postgres SETOF <a href="https://www.google.com/url?q=https://www.postgresql.org/docs/11/xfunc-sql.html%23XFUNC-SQL-FUNCTIONS-RETURNING-SET&amp;sa=D&amp;source=editors&amp;ust=1623828904660000&amp;usg=AOvVaw2fU0VGBqhODm7mUmcTvUp5">records</a>.</p>
+  <p>Cypher()</p>
+  <p>Cypher() executes the cypher query passed as an argument.</p>
+  <p>Syntax cypher(graph_name, query_string, parameters)</p>
+  <p>Returns</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A SETOF records</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Argument Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>graph_name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>The target graph for the Cypher query.</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>query_string</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>The Cypher query to be executed.</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>parameters</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An optional map of parameters used for stored procedure. Default is NULL. See <a href="#h.8ys790864f8o">Stored Procedures</a>&nbsp;for details</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>If a Cypher query does not return results, a record definition still needs to be defined. <a href="#h.vo9azwq6syoh">Example</a>.
+    </li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ /* Cypher Query Here */&nbsp; $$) AS&nbsp;(result1 agtype, result2 agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h4>Cypher in an Expression</h4>
+  <p>Cypher may not be used as part of an expression, use a subquery instead. See <a href="#h.2hqh54e4zcgm">Advanced Cypher Queries</a>&nbsp;for information about how to use Cypher queries with Expressions</p>
+  <p>SELECT Clause</p>
+  <p>Calling Cypher in the SELECT clause as an independent column is not allowed. However Cypher may be used when it belongs as a conditional.</p>
+  <p>Not Allowed:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp; &nbsp; &nbsp;cypher('graph_name', $$</p>
+          <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;MATCH (v:Person)</p>
+          <p>&nbsp; &nbsp; &nbsp; &nbsp; &nbsp;RETURN&nbsp;v.name</p>
+          <p>&nbsp; &nbsp; &nbsp;$$);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>ERROR: &nbsp;cypher(...) in expressions is not supported LINE 3: &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;cypher('graph_name', $$ &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;^ HINT: &nbsp;Use subquery instead if possible.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Using CREATE with CTEs</p>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>WITH graph_query as ( &nbsp; &nbsp;SELECT&nbsp;* &nbsp; &nbsp; &nbsp; &nbsp;FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp; &nbsp; &nbsp;MATCH&nbsp;(n), (m)</p>
+          <p>&nbsp; &nbsp; &nbsp; &nbsp; WHERE&nbsp;n.name = 'A' AND&nbsp;m.name = 'B'</p>
+          <p>&nbsp; &nbsp; &nbsp; &nbsp; CREATE (n)-[r:RELTYPE {name: n.name + '-&gt;' + m.name }]-&gt;(m) &nbsp; &nbsp; &nbsp; &nbsp;RETURN&nbsp;n.value, m.value, r.name &nbsp; &nbsp;$$) as&nbsp;(n_value&nbsp;agtype, m_value&nbsp;agtype, edge_name&nbsp;agtype) )SELECT&nbsp;* FROM&nbsp;graph_queryJOIN&nbsp;schema_name.table_name tON&nbsp;t.name = qraph_query.name;</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h2>Type Casting</h2>
+  <h3>Type Casting in Cypher</h3>
+  <p>You can typecaste one agtype type to another with the syntax: ::datatype</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;1::float $$) AS&nbsp;(float_result VARCHAR(50));</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The float value 1.0 will be returned.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>float_result</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1.0</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Type Casting to Postgres Data Types</h3>
+  <p>Some Agtype values can be converted to built in Postgres types, other types are currently not supported.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Agtype</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Postgres Data Type</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>int</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Cannot be cast</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>string</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Varchar and Char</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>bool</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>boolean</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>float</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>float</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>numeric</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Cannot be cast</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Vertex</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Cannot be cast</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Edge</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Cannot be cast</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Path</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Cannot be cast</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>Type Coercion With the Cypher Function</h3>
+  <p>The cypher function call is capable of coercing agtype to certain postgres types.</p>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;'this is a string' $$) AS&nbsp;(string_result agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;'this is a string' $$) AS&nbsp;(string_result VARCHAR(50));</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h2>Aggregation</h2>
+  <p>Aggregation does not currently support grouping by non-aggregate columns. Any reference to a non-aggregate value in a RETURN statement that contains an aggregate function will be ambiguous and non-deterministic.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Developers Note Aggregation will be heavily updated in the next release.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>See <a href="#h.5x33lfif119h">aggregation functions for more details</a>.</p>
+  <h2>Prepared Statements</h2>
+  <p>Cypher can run a read query within a Prepared Statement. When using parameters with stored procedures, An SQL Parameter must be placed in the cypher function call. See The <a href="#h.3n5ae0fn0fos">AGE Query Format</a>&nbsp;for details.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Developers NoteCREATE, SET, and REMOVE are not currently compatible with Stored Procedures.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Cypher Parameter Format</p>
+  <p>A cypher parameter is in the format of a '$' followed by an identifier. Unlike Postgres&nbsp;parameters, Cypher parameters start with a letter, followed by an alphanumeric string of arbitrary length.</p>
+  <p>Example: $parameter_name</p>
+  <p>Prepared Statements Preparation</p>
+  <p>Preparing Prepared&nbsp;Statements in cypher is an extension of Postgres' stored procedure system. Use the PREPARE clause to create a query with the Cypher Function call in it. Do not place Postgres style parameters in the cypher query call, instead place Cypher parameters in the query and place a Postgres parameter as the third argument in the Cypher function call.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>PREPARE&nbsp;cypher_stored_procedure(agtype) ASSELECT&nbsp;*FROM&nbsp;cypher('expr', $$ &nbsp; &nbsp;MATCH&nbsp;(v:Person) &nbsp; &nbsp;WHERE&nbsp;v.name = $name&nbsp;//Cypher parameter &nbsp; &nbsp;RETURN&nbsp;v $$, $1) //An SQL Parameter must be placed in the cypher function call</p>
+          <p>AS&nbsp;(v agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Prepared Statements Execution</p>
+  <p>When executing the prepared statement, place an agtype map with the parameter values where the Postgres Parameter in the Cypher function call is. The value must be an agtype map or an error will be thrown. Exclude the '$' for parameter names.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>EXECUTE&nbsp;cypher_prepared_statement('{"name": "Tobias"}');</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h2>Clauses</h2>
+  <h3>MATCH</h3>
+  <p>The MATCH&nbsp;clause allows you to specify the patterns Cypher will search for in the database. This is the primary way of getting data into the current set of bindings. It is worth reading up more on the specification of the patterns themselves in Patterns.</p>
+  <p>MATCH&nbsp;is often coupled to a WHERE&nbsp;part which adds restrictions, or predicates, to the MATCH&nbsp;patterns, making them more specific. The predicates are part of the pattern description, and should not be considered a filter applied only after the matching is done. This means that WHERE&nbsp;should always be put together with the MATCH&nbsp;clause it belongs to.</p>
+  <p>MATCH&nbsp;can occur at the beginning of the query or later, possibly after a WITH.&nbsp;If it is the first clause, nothing will have been bound yet, and Cypher will design a search to find the results matching the clause and any associated predicates specified in any WHERE&nbsp;part. Vertices and edges found by this search are available as bound pattern elements, and can be used for pattern matching of sub-graphs. They can also be used in any future clauses, where Cypher will use the known elements, and from there find further unknown elements.</p>
+  <p>Cypher is declarative, and so usually the query itself does not specify the algorithm to use to perform the search. Predicates in WHERE&nbsp;parts can be evaluated before pattern matching, during pattern matching, or after finding matches.</p>
+  <p>Basic vertex finding</p>
+  <p>Get all Vertices</p>
+  <p>By just specifying a pattern with a single vertex and no labels, all vertices in the graph will be returned.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$MATCH&nbsp;(v)RETURN&nbsp;v $$) as&nbsp;(v&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Returns all the vertices in the database.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>v</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{id: 0; label: ‘Person’; properties{name: ‘Charlie Sheen’}}::vertex</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{id: 1; label: ‘Person’; properties{name: ‘Martin Sheen’}}::vertex</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{id: 2; label: ‘Person’; properties{name: ‘Michael &nbsp;Douglas’}}::vertex</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{id: 3; label: ‘Person’; properties{name: ‘Oliver Stone’}}::vertex</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{id: 4; label: ‘Person’; properties{name: ‘Rob Reiner’}}::vertex</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{id: 5; label: ‘Movie’; properties{name: ‘Wall Street’}}::vertex</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{id: 6; label: ‘Movie’; properties{title: ‘The American President’}}::vertex</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>7 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Get all vertices with a label</p>
+  <p>Getting all vertices with a label on them is done with a single node pattern where the vertex has a label on it.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$MATCH&nbsp;(movie:Movie)RETURN&nbsp;movie.title $$) as&nbsp;(title&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Returns all the movies in the database.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>title</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Wall Street’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘The American President’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>2 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Related Vertices</p>
+  <p>The symbol -[]- means related to, without regard to type or direction of the edge.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$MATCH&nbsp;(director {name: 'Oliver Stone'})-[]-(movie)RETURN&nbsp;movie.title $$) as&nbsp;(title&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Returns all the movies directed by 'Oliver Stone'</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>title</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Wall Street’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Match with labels</p>
+  <p>To constrain your pattern with labels on vertices, you add it to your vertex in the pattern, using the label syntax.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$MATCH&nbsp;(:Person {name: 'Oliver Stone'})-[]-(movie:Movie)RETURN&nbsp;movie.title $$) as&nbsp;(title&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Returns any vertices connected with the Person 'Oliver' that are labeled Movie.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>title</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Wall Street’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Edge&nbsp;basics</p>
+  <p>Outgoing Edges</p>
+  <p>When the direction of an edge is of interest, it is shown by using -&gt; or &lt;-.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$MATCH&nbsp;(:Person {name: 'Oliver Stone'})-[]-&gt;(movie)RETURN&nbsp;movie.title $$) as&nbsp;(title&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Returns any vertices connected with the Person'Oliver' by an outgoing edge.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>title</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Wall Street’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Directed Edges and variable</p>
+  <p>If a variable is required, either for filtering on properties of the edge, or to return the edge, this is how you introduce the variable.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$MATCH&nbsp;(:Person {name: 'Oliver Stone'})-[r]-&gt;(movie)RETURN&nbsp;type(r) $$) as&nbsp;(type&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Returns the type of each outgoing edge from 'Oliver'.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>title</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘DIRECTED’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Match on edge type</p>
+  <p>When you know the edge type you want to match on, you can specify it by using a colon together with the edge type.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$MATCH&nbsp;(:Movie {title: 'Wall Street'})&lt;-[:ACTED_IN]-(actor)RETURN&nbsp;actor.name $$) as&nbsp;(actors_name&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Returns all actors that ACTED_IN'Wall Street'.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>actors_name</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Charlie Sheen’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Martin Sheen’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Michael &nbsp;Douglas’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>3 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Match on edge type and use a variable</p>
+  <p>If you both want to introduce a variable to hold the edge, and specify the edge type you want, just add them both.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$MATCH&nbsp;({title: 'Wall Street'})&lt;-[r:ACTED_IN]-(actor)RETURN&nbsp;r.role $$) as&nbsp;(role&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Returns ACTED_IN roles for 'Wall Street'.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>role</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Gordon Gekko’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Carl Fox’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Bud Fox’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>3 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Multiple Edges</p>
+  <p>Edges&nbsp;can be expressed by using multiple statements in the form of ()-[]-(), or they can be strung together.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(charlie {name: 'Charlie Sheen'})-[:ACTED_IN]-&gt;(movie)&lt;-[:DIRECTED]-(director) &nbsp; &nbsp;RETURN&nbsp;movie.title, director.name $$) as&nbsp;(title&nbsp;agtype, name&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Returns the movie 'Charlie Sheen' acted in and its director.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>title</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>name</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Wall Street’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>‘Oliver Stone’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>WITH</h3>
+  <p>Introduction</p>
+  <p>Using WITH, you can manipulate the output before it is passed on to the following query parts. The manipulations can be of the shape and/or number of entries in the result set.</p>
+  <p>WITH can also, like RETURN, alias expressions that are introduced into the results using the aliases as the binding name.</p>
+  <p>WITH&nbsp;is also used to separate the reading of the graph from updating of the graph. Every part of a query must be either read-only or write-only. When going from a writing part to a reading part, the switch can be done with an optional WITH&nbsp;clause.</p>
+  <p>Filter on results</p>
+  <p>Results passed through a WITH clause can be filtered on.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$MATCH&nbsp;(david {name: 'David'})-[:FRIEND]-(otherPerson)WITH&nbsp;otherPerson.name as&nbsp;name, otherPerson.age as&nbsp;age, otherPerson.freetonight as&nbsp;free_tonightWHERE&nbsp;age &gt; 21&nbsp;and&nbsp;free_tonight = TRUERETURN&nbsp;name $$) as&nbsp;(name&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The name of the person connected to 'David' with the at least more than one outgoing relationship will be returned by the query.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>name</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>"Anders"</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>RETURN &nbsp;</h3>
+  <p>In the RETURN&nbsp;part of your query, you define which parts of the pattern you are interested in. It can be nodes, relationships, or properties on these.</p>
+  <p>Return nodes</p>
+  <p>To return a node, list it in the RETURN statement.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*</p>
+          <p>FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n {name: 'B'}) &nbsp; &nbsp;RETURN&nbsp;n $$) as&nbsp;(n agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The example will return the node.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>n</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{id: 0; label: ‘’ properties: {name: ‘B’}}::vertex</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Return edges</p>
+  <p>To return n edge, just include it in the RETURN list.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n)-[r:KNOWS]-&gt;() &nbsp; &nbsp;WHERE&nbsp;n.name = 'A' &nbsp; &nbsp;RETURN&nbsp;r $$) as&nbsp;(r agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The relationship is returned by the example.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>r</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{id: 2; startid: 0; endid: 1; label: ‘KNOWS’ properties: {}}::edge</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Return property</p>
+  <p>To return a property, use the dot separator, like this:</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n {name: 'A'}) &nbsp; &nbsp;RETURN&nbsp;n.name $$) as&nbsp;(name agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The value of the property name gets returned.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>name</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘A’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Variable with uncommon characters</p>
+  <p>To introduce a placeholder that is made up of characters that are not contained in the English alphabet, you can use the ` to enclose the variable, like this:</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(`This isn\'t a common variable`) &nbsp; &nbsp;WHERE&nbsp;`This isn\'t a common variable`.name = 'A' &nbsp; &nbsp;RETURN&nbsp;`This isn\'t a common variable`.happy $$) as&nbsp;(happy&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The node with name "A" is returned.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>happy</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>"Yes!"</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Aliasing a field</p>
+  <p>If the name of the field should be different from the expression used, you can rename it by changing the name in the column list definition.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n {name: 'A'}) &nbsp; &nbsp;RETURN&nbsp;n.name $$) as&nbsp;(objects_name&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Returns the age property of a node, but renames the field.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>objects_name</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘A’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Optional properties</p>
+  <p>If a property might or might not be there, you can still select it as usual. It will be treated as null if it is missing.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n) &nbsp; &nbsp;RETURN&nbsp;n.age $$) as&nbsp;(age&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>This example returns the age when the node has that property, or null if the property is not there.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>55</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>NULL</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(2 rows)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Other expressions</p>
+  <p>Any expression can be used as a return item—literals, predicates, properties, functions, and everything else.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(a) &nbsp; &nbsp;RETURN&nbsp;a.age &gt; 30, ‘I'm a literal’, id(a) $$) as&nbsp;(older_than_30 agtype, literal agtype, id&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Returns a predicate, a literal and function call with a pattern expression parameter.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>older_than_30</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>literal</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>id</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>true</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>‘I’m a literal’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>1</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Unique results</p>
+  <p>DISTINCT retrieves only unique records depending on the fields that have been selected to output.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$MATCH&nbsp;(a {name: 'A'})-[]-&gt;(b)RETURN&nbsp;DISTINCT&nbsp;b $$) as&nbsp;(b agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The node named "B" is returned by the query, but only once.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>b</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{id: 1; label: ‘’ properties: {name: ‘B’}}::vertex</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>ORDER BY</h3>
+  <p>ORDER BY&nbsp;is a sub-clause following WITH, and it specifies that the output should be sorted and how.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Developers Note&nbsp;</p>
+          <p>In future releases, ORDER BY will be compatible with the RETURN clause, but is currently not available.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Introduction</p>
+  <p>Note that you cannot sort on nodes or relationships, just on properties on these. ORDER BY&nbsp;relies on comparisons to sort the output, see Ordering and comparison of values. In terms of scope of variables, ORDER BY&nbsp;follows special rules, depending on if the projecting RETURN or WITH&nbsp;clause is either aggregating or DISTINCT. If it is an aggregating or DISTINCT&nbsp;projection, only the variables available in the projection are available. If the projection does not alter the output cardinality (which aggregation and DISTINCT&nbsp;do), variables available from before the projecting clause are also available. When the projection clause shadows already existing variables, only the new variables are available.Lastly, it is not allowed to use aggregating expressions in the ORDER BY&nbsp;sub-clause if they are not also listed in the projecting clause. This last rule is to make sure that ORDER BY&nbsp;does not change the results, only the order of them</p>
+  <p>Order nodes by property</p>
+  <p>ORDER BY is used to sort the output.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n) &nbsp; &nbsp;WITH&nbsp;n.name as&nbsp;name, n.age as&nbsp;age &nbsp; &nbsp;ORDER&nbsp;BY&nbsp;n.name &nbsp; &nbsp;RETURN&nbsp;name, age $$) as&nbsp;(name&nbsp;agtype, age&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The nodes are returned, sorted by their name.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>"A"</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>34</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>"B"</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>34</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>"C"</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>32</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Order nodes by multiple properties</p>
+  <p>You can order by multiple properties by stating each variable in the ORDER BY&nbsp;clause. Cypher will sort the result by the first variable listed, and for equal values, go to the next property in the ORDER BY&nbsp;clause, and so on.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n) &nbsp; &nbsp;WITH&nbsp;n.name as&nbsp;name, n.age as&nbsp;age &nbsp; &nbsp;ORDER&nbsp;BY&nbsp;n.age, n.name &nbsp; &nbsp;RETURN&nbsp;name, age $$) as&nbsp;(name&nbsp;agtype, age&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>This returns the nodes, sorted first by their age, and then by their name.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>"C"</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>32</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>"A"</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>34</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>"B"</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>34</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Order nodes in descending order</p>
+  <p>By adding DESC[ENDING]&nbsp;after the variable to sort on, the sort will be done in reverse order.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n) &nbsp; &nbsp;WITH&nbsp;n.name AS&nbsp;name, n.age AS&nbsp;age &nbsp; &nbsp;ORDER&nbsp;BY&nbsp;n.name DESC &nbsp; &nbsp;RETURN&nbsp;name, age $$) as&nbsp;(name&nbsp;agtype, age agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The example returns the nodes, sorted by their name in reverse order.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>"C"</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>32</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>"B"</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>34</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>"A"</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>34</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>(3 rows)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Ordering null</p>
+  <p>When sorting the result set, null&nbsp;will always come at the end of the result set for ascending sorting,and first when doing descending sort.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n) &nbsp; &nbsp;WITH&nbsp;n.name AS&nbsp;name, n.age AS&nbsp;age, n.height &nbsp; &nbsp;ORDER&nbsp;BY&nbsp;n.height &nbsp; &nbsp;RETURN&nbsp;name, age, height $$) as&nbsp;(name&nbsp;agtype, age agtype, height agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The nodes are returned sorted by the length property, with a node without that property last.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>age</p>
+        </td>
+        <td colspan="1" rowspan="1"></td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>"A"</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>34</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>170</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>"C"</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>32</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>185</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>"B"</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>34</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>&lt;NULL&gt;</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3" rowspan="1">
+          <p>(3 rows)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>WHERE</h3>
+  <p>WHERE&nbsp;is a subclause of MATCH that puts restrictions on the MATCH clause.</p>
+  <p>In the case of multiple MATCH clauses, the predicate in WHERE is always a part of the patterns in the directly preceding MATCH. Both results and performance may be impacted if the WHERE is associated with the wrong MATCH clause.</p>
+  <p>Filter on a Vertex Property</p>
+  <p>To filter on a vertex property, write your clause after the WHERE&nbsp;keyword.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n) &nbsp; &nbsp;WHERE&nbsp;n.age &lt; 30&nbsp; &nbsp; &nbsp;RETURN&nbsp;n.name, n.age $$) as&nbsp;(name&nbsp;agtype, age&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The name and age values for the 'Tobias' node are returned because he is less than 30 years of age.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Tobias’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>26</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Filter on an Edge Property</p>
+  <p>To filter on an edge property, write your clause after the WHERE keyword.</p>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n)-[k:KNOWS]-&gt;(f) &nbsp; &nbsp;WHERE&nbsp;k.since &lt; 2000&nbsp; &nbsp; &nbsp;RETURN&nbsp;f.name, f.age, f.email $$) as&nbsp;(name&nbsp;agtype, age agtype, email agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The name, age and email values for the 'Peter' node are returned because Andrés has known him since before 2000.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>age</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>email</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Peter’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>35</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>‘peter_n@example.com’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Using Multiple Filters</p>
+  <p>You can use the boolean operators AND, OR and NOT.</p>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n) &nbsp; &nbsp;WHERE&nbsp;(n.age &lt; 30&nbsp;AND&nbsp;n.name = 'Tobias')</p>
+          <p>&nbsp; &nbsp; &nbsp; &nbsp; OR&nbsp;NOT&nbsp;(n.name ='Tobias'&nbsp;OR&nbsp;n.name = 'Peter') &nbsp; &nbsp;RETURN&nbsp;n.name, n.age $$) as&nbsp;(name&nbsp;agtype, age&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Results:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Andres’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>36</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Tobias’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>25</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Peter’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>35</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>3 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Filter On Properties With STARTS WITH</p>
+  <p>Perform case-sensitive prefix searching on strings</p>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n) &nbsp; &nbsp;WHERE&nbsp;n.name STARTS&nbsp;WITH&nbsp;'P' &nbsp; &nbsp;RETURN&nbsp;n.name, n.age $$) as&nbsp;(name&nbsp;agtype, age&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Results:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Peter’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>35</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>3 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Filter On Properties With ENDS WITH</p>
+  <p>Perform case-sensitive suffix searching on strings</p>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n) &nbsp; &nbsp;WHERE&nbsp;n.name ENDS&nbsp;WITH&nbsp;'s' &nbsp; &nbsp;RETURN&nbsp;n.name, n.age $$) as&nbsp;(name&nbsp;agtype, age&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Results:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Andres’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>36</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Tobias’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>25</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>3 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Filter On Properties With CONTAINS</p>
+  <p>Perform case-sensitive inclusion searching in strings</p>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n) &nbsp; &nbsp;WHERE&nbsp;n.name CONTAINS&nbsp;'e' &nbsp; &nbsp;RETURN&nbsp;n.name, n.age $$) as&nbsp;(name&nbsp;agtype, age&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Results:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Andres’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>36</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Peter’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>35</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>3 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Filter On Properties With Exists</p>
+  <p>Use the exists() function to only include nodes or relationships in which a property exists.</p>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$MATCH&nbsp;(n)WHERE&nbsp;exists(n.belt)RETURN&nbsp;n.name, n.belt $$) as&nbsp;(name&nbsp;agtype, belt agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The name and belt for the 'Andres' node are returned because he is the only one with a belt property</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>belt</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Andres’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>‘white’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Filter On Patterns With Exists</p>
+  <p>Patterns are not only expressions, they are also predicates when used with the EXISTS subclause. The only limitation to your pattern is that you must be able to express it in a single path. You cannot use commas between multiple paths like you do in MATCH. You can achieve the same effect by combining multiple patterns with AND. Note that you cannot introduce new variables here.</p>
+  <p>Although it might look very similar to the MATCH patterns, the WHERE clause is all about eliminating matched subgraphs. MATCH (a)-[]-&gt;(b)&nbsp;is very different from WHERE EXISTS((a)-[]-&gt;(b)). The first will produce a subgraph for every path it can find between a and b, whereas the latter will eliminate any matched subgraphs where a and b do not have a directed relationship chain between them.</p>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(tobias {name: 'Tobias'}), (others) &nbsp; &nbsp;WHERE&nbsp;EXISTS((tobias)&lt;-[]-(others)) &nbsp; &nbsp;RETURN&nbsp;others.name, others.age $$) as&nbsp;(name&nbsp;agtype, age agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Andres’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>36</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Filter on patterns using NOT</p>
+  <p>The NOT&nbsp;operator can be used to exclude a pattern.</p>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(persons), (peter {name: 'Peter'}) &nbsp; &nbsp;WHERE&nbsp;NOT&nbsp;EXISTS((persons)-[]-&gt;(peter)) &nbsp; &nbsp;RETURN&nbsp;persons.name, persons.age $$) as&nbsp;(name&nbsp;agtype, age agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Name and age values for nodes that do not have an outgoing relationship to the 'Peter' node are returned.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Tobias’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>25</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Peter’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>35</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>2 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Filter on patterns with properties</p>
+  <p>You can also add properties to your patterns.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$MATCH&nbsp;(n)WHERE&nbsp;EXISTS((n)-[:KNOWS]-&gt;({name: 'Tobias'}))RETURN&nbsp;n.name, n.age $$) as&nbsp;(name&nbsp;agtype, age agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Finds all name and age values for nodes that have a KNOWS&nbsp;relationship to a node with the name 'Tobias.'</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Andres’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>36</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>IN&nbsp;Operator with Lists</p>
+  <p>To check if an element exists in a list, you can use the IN&nbsp;operator.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(a) &nbsp; &nbsp;WHERE&nbsp;a.name IN&nbsp;['Peter', 'Tobias'] &nbsp; &nbsp;RETURN&nbsp;a.name, a.age $$) as&nbsp;(name&nbsp;agtype, age agtype)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>This query shows how to check if a property exists in a literal list</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Tobias’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>25</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Peter’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>35</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>2 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>CREATE</h3>
+  <p>The CREATE&nbsp;clause is used to create graph vertices and edges.</p>
+  <p>Terminal CREATE clauses</p>
+  <p>A create clause that is not followed by another clause is called a terminal clause. When a cypher query ends with a terminal clause, no results will be returned from the cypher function call. However, the cypher function call still requires a column list definition. When cypher ends with a terminal node, define a single value in the column list definition: no data will be returned in this variable.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;CREATE&nbsp;/* Create clause here, no following clause */ $$) as&nbsp;(a agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>a</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>0 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Create Vertices</p>
+  <p>Create single vertex</p>
+  <p>Creating a single vertex is done by issuing the following query.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;CREATE&nbsp;(n) $$) as&nbsp;(v agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Nothing is returned from this query.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>v</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(0 rows)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Create multiple vertices</p>
+  <p>Creating multiple vertices is done by separating them with a comma.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;CREATE&nbsp;(n), (m) $$) as&nbsp;(v agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>a</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>0 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Create a vertex with a label</p>
+  <p>To add a label when creating a vertex, use the syntax below.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;CREATE&nbsp;(:Person) $$) as&nbsp;(v agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Nothing is returned from this query.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>v</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>0 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Create vertex and add labels and properties</p>
+  <p>When creating a new vertex with labels, you can add properties at the same time.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;CREATE&nbsp;(:Person {name: ‘Andres’, title: ‘Developer’) $$) as&nbsp;(n agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Nothing is returned from this query.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>n</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(0 rows)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Return created node</p>
+  <p>Creating a single node is done by issuing the following query.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;CREATE&nbsp;(a {name: ‘Andres’)</p>
+          <p>&nbsp; &nbsp; RETURN a $$) as&nbsp;(a agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The newly-created node is returned.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>a</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{id: 0; label: ‘’; properties: {name: ‘Andres’}}::vertex</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Create Edges</p>
+  <p>Create an edge between two nodes</p>
+  <p>To create an edge between two vertices, we first get the two vertices. Once the nodes are loaded, we simply create an edge between them.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(a:Person), (b:Person) &nbsp; &nbsp;WHERE&nbsp;a.name = 'Node A'&nbsp;AND&nbsp;b.name = 'Node B' &nbsp; &nbsp;CREATE&nbsp;(a)-[e:RELTYPE]-&gt;(b) &nbsp; &nbsp;RETURN&nbsp;e $$) as&nbsp;(e agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The created edge is returned by the query.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>e</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{id: 3; startid: 0, endid: 1; label: ‘RELTYPE’; properties: {}}::edge</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Create an edge and set properties</p>
+  <p>Setting properties on edges is done in a similar manner to how it’s done when creating vertices. Note that the values can be any expression.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(a:Person), (b:Person) &nbsp; &nbsp;WHERE&nbsp;a.name = 'Node A'&nbsp;AND&nbsp;b.name = 'Node B' &nbsp; &nbsp;CREATE&nbsp;(a)-[e:RELTYPE {name:a.name + ‘&lt;-&gt;’ + b.name}]-&gt;(b) &nbsp; &nbsp;RETURN&nbsp;e $$) as&nbsp;(e agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The newly-created edge is returned by the example query.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>e</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{id: 3; startid: 0, endid: 1; label: ‘RELTYPE’; properties: {name: ‘Node A&lt;-&gt;Node B’}}::edge</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Create a full path</p>
+  <p>When you use CREATE and a pattern, all parts of the pattern that are not already in scope at this time will be created.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;CREATE&nbsp;p = (andres {name:'Andres'})-[:WORKS_AT]-&gt;(neo)&lt;-[:WORKS_AT]-(michael {name:'Michael'}) &nbsp; &nbsp;RETURN&nbsp;p $$) as&nbsp;(p agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>This query creates three nodes and two relationships in one go, assigns it to a path variable, and returns it.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>p</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>[</p>
+          <p>&nbsp; &nbsp; {id:0; label: ‘’; properties:{name:’Andres’}}::vertex,</p>
+          <p>&nbsp; &nbsp; {id: 3; startid: 0, endid: 1; label: ‘WORKS_AT’; properties: {}}::edge,</p>
+          <p>&nbsp; &nbsp; {id:1; label: ‘’; properties: {}}::vertex</p>
+          <p>&nbsp; &nbsp; {id: 3; startid: 2, endid: 1; label: ‘WORKS_AT’; properties: {}}::edge,</p>
+          <p>&nbsp; &nbsp; {id:2; label: ‘’; properties: {name:’Michael’}}::vertex</p>
+          <p>]::path</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>SET</h3>
+  <p>The SET&nbsp;clause is used to update labels on nodes and properties on vertices and edges</p>
+  <p>Terminal SET clauses</p>
+  <p>A set clause that is not followed by another clause is called a terminal clause. When a cypher query ends with a terminal clause, no results will be returned from the cypher function call. However, the cypher function call still requires a column list definition. When cypher ends with a terminal node, define a single value in the column list definition: no data will be returned in this variable.</p>
+  <p>Set a property</p>
+  <p>To set a property on a node or relationship, use SET.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; MATCH&nbsp;(v {name: 'Andres'}) &nbsp; SET&nbsp;v.surname = 'Taylor' $$) as&nbsp;(v agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The newly changed node is returned by the query.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>v</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(0 rows)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Return created vertex</p>
+  <p>Creating a single vertex is done by issuing the following query.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(v {name: 'Andres'}) &nbsp; &nbsp;SET&nbsp;v.surname = 'Taylor' &nbsp; &nbsp;RETURN&nbsp;v $$) as&nbsp;(v agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The newly changed vertex is returned by the query.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>v</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{id: 3; label: ‘Person’; properties: {surname:"Taylor", name:"Andres", age:36, hungry:true}}::vertex</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Remove a property</p>
+  <p>Normally you remove a property by using REMOVE, but it’s sometimes handy to do it using the SET command. One example is if the property comes from a parameter.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(v {name: 'Andres'}) &nbsp; &nbsp;SET&nbsp;v.name = NULL &nbsp; &nbsp;RETURN&nbsp;v $$) as&nbsp;(v agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The node is returned by the query, and the name property is now missing.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>v</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{id: 3; label: ‘Person’; properties: {surname:"Taylor", age:36, hungry:true}}::vertex</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>(1 row)</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>REMOVE</h3>
+  <p>The REMOVE&nbsp;clause is used to remove properties from vertex and edges.</p>
+  <p>Terminal REMOVE clauses</p>
+  <p>A remove clause that is not followed by another clause is called a terminal clause. When a cypher query ends with a terminal clause, no results will be returned from the cypher function call. However, the cypher function call still requires a column list definition. When cypher ends with a terminal node, define a single value in the column list definition: no data will be returned in this variable.</p>
+  <p>Remove a property</p>
+  <p>Cypher doesn’t allow storing null&nbsp;in properties. Instead, if no value exists, the property is just not there. So, to remove a property value on a node or a relationship, is also done with REMOVE.113</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(andres {name: 'Andres'}) &nbsp; &nbsp;REMOVE&nbsp;andres.age &nbsp; &nbsp;RETURN&nbsp;andres $$) as&nbsp;(andres agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The node is returned, and no property age&nbsp;exists on it.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>andres</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{id: 3; label: ‘Person’; properties: {name:"Andres"}}::vertex</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>
