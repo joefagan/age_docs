@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Apache AGE</title>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+    <h1>Apache AGE</h1>
+    <p>Apache AGE a PostgreSQL extension that provides graph database functionality. AGE is an acronym for A Graph Extension, and is inspired by Bitnine's fork of PostgreSQL 10, AgensGraph, which is a multi-model database. The goal of the project is to create single storage that can handle both relational and graph model data so that users can use standard ANSI SQL along with openCypher, the Graph query language.</p>
+    <p>Below is a brief overview of the AGE architecture in relation to the PostgreSQL architecture and backend. Every component runs on the PostgreSQL transaction cache layer and storage layer.</p>
+    <h2>Setup</h2>
+    <h3>Getting AGE</h3>
+    <h4>Getting Source Code</h4>
+    <h4>Apache AGE releases</h4>
+    <p>The release notes for each release can be found from one of the following links:</p>
+    <ul>
+      <li>
+        <a href="https://www.google.com/url?q=https://github.com/apache/incubator-age/releases/tag/v0.3.0.rc0-incubating&amp;sa=D&amp;source=editors&amp;ust=1623828904421000&amp;usg=AOvVaw2XEQVkryqSYZFfwbnEHRJX">Apache AGE 0.3.0</a>
+      </li>
+      <li>
+        <a href="https://www.google.com/url?q=https://github.com/apache/incubator-age/releases/tag/v0.2.0&amp;sa=D&amp;source=editors&amp;ust=1623828904422000&amp;usg=AOvVaw27ur8B0dZ7p_PXuzjGouX1">Apache AGE 0.2.0</a>
+      </li>
+      <li>
+        <a href="https://www.google.com/url?q=https://github.com/apache/incubator-age/releases/tag/v0.1.0&amp;sa=D&amp;source=editors&amp;ust=1623828904422000&amp;usg=AOvVaw3GuXqBmf3YmppeWDngyOYB">Apache AGE 0.1.0</a>
+      </li>
+    </ul>
+    <p>The source code can be downloaded from one of the following Apache release</p>
+    <ul>
+      <li>
+        <a href="https://www.google.com/url?q=https://downloads.apache.org/incubator/age/&amp;sa=D&amp;source=editors&amp;ust=1623828904423000&amp;usg=AOvVaw3PNfi3aohwtFTqq2fLAu23">https://downloads.apache.org/incubator/age/</a>
+      </li>
+    </ul>
+    <h4>Github</h4>
+    <p>The source code can be downloaded from the master branch on Github. Please note that this is the development link and the Apache AGE makes no guarantees about the stability of the source code.</p>
+    <ul>
+      <li>
+        <a href="https://www.google.com/url?q=https://github.com/apache/incubator-age&amp;sa=D&amp;source=editors&amp;ust=1623828904424000&amp;usg=AOvVaw3V-F8POgOXGwfWq8sms-st">https://github.com/apache/incubator-age</a>
+      </li>
+    </ul>
+    <h3>Pre-Installation</h3>
+    <p>Install the following essential libraries according to each OS.</p>
+    <p>Building AGE from source depends on the following Linux libraries (Ubuntu package names shown below):</p>
+    <p>CENTOS</p>
+    <table>
+      <tbody>
+        <tr>
+          <td colspan="1" rowspan="1">
+            <p>$&nbsp;yum install gcc glibc glib-common readline readline-devel zlib zlib-devel flex bison</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Fedora</p>
+    <table>
+      <tbody>
+        <tr>
+          <td colspan="1" rowspan="1">
+            <p>$&nbsp;dnf install gcc glibc bison flex readline readline-devel zlib zlib-devel</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p>Ubuntu</p>
+    <table>
+      <tbody>
+        <tr>
+          <td colspan="1" rowspan="1">
+            <p>$&nbsp;sudo apt-get install build-essential libreadline-dev zlib1g-dev flex bison</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Installation</h3>
+    <p>The build process will attempt to use the first path in the PATH environment variable when installing AGE. If the pg_config path is located there, run the following command in the source code directory of Apache AGE to build and install the extension.</p>
+    <table>
+      <tbody>
+        <tr>
+          <td colspan="1" rowspan="1">
+            <p>$&nbsp;make install</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p>If the path to your Postgres installation is not in the PATH variable, add the path in the arguments:</p>
+    <table>
+      <tbody>
+        <tr>
+          <td colspan="1" rowspan="1">
+            <p>$&nbsp;make PG_CONFIG=/path/to/postgres/bin/pg_config install</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h3>Post Installation</h3>
+    <h4>Per Installation Instructions</h4>
+    <p>After the installation, run the CREATE EXTENSION command to have AGE be installed on the server.</p>
+    <table>
+      <tbody>
+        <tr>
+          <td colspan="1" rowspan="1">
+            <p>CREATE&nbsp;EXTENSION age;</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>Per Session Instructions</h4>
+    <table>
+      <tbody>
+        <tr>
+          <td colspan="1" rowspan="1">
+            <p>LOAD&nbsp;'age';</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <p>We recommend adding ag_catalog to your search_path to simplify your queries.&nbsp;The rest of this document will assume you have done so. If you do not, remember to add 'ag_catalog' to your cypher query function calls.</p>
+    <table>
+      <tbody>
+        <tr>
+          <td colspan="1" rowspan="1">
+            <p>SET&nbsp;search_path = ag_catalog, "$user", public;</p>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+</body>
+</html>

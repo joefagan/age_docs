@@ -1,0 +1,4395 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Apache AGE Functions</title>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+</head>
+<body>
+  <h1>Functions</h1>
+  <h3>Built-In functions:</h3>
+  <p>All AGE functions are defined in the ag_catalog namespace. When using built-in functions in a cypher query, the default namespace is always ag_catalog.This is independent of the configuration of search_path. These functions can be used outside a cypher command. No functions in ag_catalog that are not defined in this section can be used in a cypher command.</p>
+  <h4>Predicate Functions</h4>
+  <p>Predicates are boolean functions that return true or false for a given set of input. They are most commonly used to filter out subgraphs in the WHERE&nbsp;part of a query.</p>
+  <p>Exists(Property)</p>
+  <p>exists()&nbsp;returns true if the specified property exists in the node, relationship or map. This is different from the EXISTS clause.</p>
+  <p>Syntax:exists(property)</p>
+  <p>Returns:</p>
+  <p>An agtype boolean</p>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>property</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>A property from a vertex or edge</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*</p>
+          <p>FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp; MATCH&nbsp;(n) &nbsp; &nbsp; WHERE&nbsp;exists(n.surname) &nbsp; &nbsp; RETURN&nbsp;n.first_name, n.last_name $$) as&nbsp;(first_name agtype, last_name agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Results:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>first_name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>last_name</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘John</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>‘Smith’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘Patty’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>‘Patterson’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>2 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h4>Scalar Functions</h4>
+  <p>id()</p>
+  <p>id()&nbsp;returns the id of a vertex or edge.</p>
+  <p>Syntax:id(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype integer</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a vertex or edge.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(a) &nbsp; &nbsp;RETURN&nbsp;id(a) $$) as&nbsp;(id&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Results</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>id</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>0</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>2</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>3</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>4 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>start_id()</p>
+  <p>start_id() returns the id of the vertex that is the starting vertex for the edge.</p>
+  <p>Syntax: start_id(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype integer</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that evaluates to an edge.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;()-[e]-&gt;() &nbsp; &nbsp;RETURN&nbsp;start_id(e) $$) as&nbsp;(start_id&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Results</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>start_id</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>0</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>2</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>3</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>4 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>end_id()</p>
+  <p>end_id() returns the id of the vertex that is the ending vertex for the edge.</p>
+  <p>Syntax: end_id(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype integer</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that evaluates to an edge.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;()-[e]-&gt;() &nbsp; &nbsp;RETURN&nbsp;end_id(e) $$) as&nbsp;(end_id&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Results</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>end_id</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>4</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>5</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>6</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>7</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>4 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>type()</p>
+  <p>type() returns the string representation of the edge type</p>
+  <p>Syntax: type(edge)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype string</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>edge</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that evaluates to an edge.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;()-[e]-&gt;() &nbsp; &nbsp;RETURN&nbsp;type(e) $$) as&nbsp;(type&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Results</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>type</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>“KNOWS”</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>“KNOWS”</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>2 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>properties()</p>
+  <p>Returns an agtype map containing all the properties of a vertex or edge. If the argument is already a map, it is returned unchanged.</p>
+  <p>Syntax: properties(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype Map.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a vertex, an edge, or an agtype map.</p>
+          <p>Considerations: properties(null) returns null.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>properties(null)&nbsp;returns null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;CREATE&nbsp;(p:Person {name: 'Stefan', city: 'Berlin'}) &nbsp; &nbsp;RETURN&nbsp;properties(p) $$) as&nbsp;(type&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Results:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>properties</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>{name: "Stefan"; city: "Berlin"}</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>head()</p>
+  <p>returns the first element in an agtype list.</p>
+  <p>Syntax: head(list)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>The type of the value returned will be that of the first element of the list.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>List</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a list</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>head(null)&nbsp;returns null.</li>
+    <li>If the first element in the list is null, head(list)&nbsp;will return null.</li>
+  </ul>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; MATCH&nbsp;(a) &nbsp; WHERE&nbsp;a.name = 'Eskil' &nbsp; RETURN&nbsp;a.array, head(a.array) $$) as&nbsp;(lst&nbsp;agtype, lst_head&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The first element in the list is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>lst</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>lst_head</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>["one","two","three"]</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>"one"</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>last()</p>
+  <p>returns the last element in an agtype list.</p>
+  <p>Syntax:last(list)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>The type of the value returned will be that of the last element of the list.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>List</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a list</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>tail(null) returns null.</li>
+    <li>If the last element in the list is null, last(list) will return null.</li>
+  </ul>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$MATCH&nbsp;(a)WHERE&nbsp;a.name = 'Eskil'RETURN&nbsp;a.array, last(a.array) $$) as&nbsp;(lst&nbsp;agtype, lst_tail&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The first element in the list is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>lst</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>lst_tail</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>["one","two","three"]</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>"three"</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>length()</p>
+  <p>length() returns the length of a path.</p>
+  <p>Syntax: length(path)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype Integer.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>path</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a path.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:length(null) returns null.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; MATCH&nbsp;p = (a)-[]-&gt;(b)-[]-&gt;(c) &nbsp; WHERE&nbsp;a.name = 'Alice' &nbsp; RETURN&nbsp;length(p) $$) as&nbsp;(length_of_path&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The length of the path p is returned.</p>
+  <p>Results:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>length_of_path</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>2</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>2</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>2</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>3 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>size()</p>
+  <p>size() returns the length of a list.</p>
+  <p>Syntax:size(path)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype Integer.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>list</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a list.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>size(null) returns null.</li>
+  </ul>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;size(['Alice', 'Bob']) $$) as&nbsp;(size_of_list&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The length of the path p is returned.</p>
+  <p>Results:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>size_of_list</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>2</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>startNode()</p>
+  <p>startNode()&nbsp;returns the start node of an edge.</p>
+  <p>Syntax:startNode(edge)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A vertex.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>edge</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns an edge.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>startNode(null) returns null.</li>
+  </ul>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(x:Developer)-[r]-() &nbsp; &nbsp;RETURN&nbsp;startNode(r) $$) as&nbsp;(v agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>v</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Node[0]{name:"Alice",age:38,eyes:"brown"}</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Node[0]{name:"Alice",age:38,eyes:"brown"}</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>2 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>endNode()</p>
+  <p>endNode() returns the start node of an edge.</p>
+  <p>Syntax: endNode(edge)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A vertex.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>edge</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns an edge.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>endNode(null) returns null.</li>
+  </ul>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(x:Developer)-[r]-() &nbsp; &nbsp;RETURN&nbsp;endNode(r) $$) as&nbsp;(v&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>v</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Node[2]{name:"Charlie",age:53,eyes:"green"}</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Node[1]{name:"Bob",age:25,eyes:"blue"}</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>2 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>timestamp()</p>
+  <p>timestamp()&nbsp;returns the difference, measured in milliseconds, between the current time and midnight, January 1, 1970 UTC.</p>
+  <p>Syntax:timestamp()</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An Agtype Integer.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>timestamp()&nbsp;will return the same value during one entire query, even for long-running queries.</li>
+  </ul>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;timestamp() $$) as&nbsp;(t agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The time in milliseconds is returned.</p>
+  <p>Results:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>t</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1613496720760</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>toBoolean()</p>
+  <p>toBoolean()&nbsp;converts a string value to a boolean value.</p>
+  <p>Syntax: toBoolean(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype Boolean.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a boolean or string value.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>toBoolean(null)&nbsp;returns null.</li>
+    <li>If expression&nbsp;is a boolean value, it will be returned unchanged.</li>
+    <li>If the parsing fails, null&nbsp;will be returned.</li>
+  </ul>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;toBoolean('TRUE'), toBoolean('not a boolean') $$) as&nbsp;(a_bool agtype, not_a_bool agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>a_bool</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>not_a_bool</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>true</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>NULL</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>toFloat()</p>
+  <p>toFloat()&nbsp;converts an integer or string value to a floating point number.</p>
+  <p>Syntax:toFloat(expression)</p>
+  <p>Returns:A Float.</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns an agtype number or agtype string value.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>toFloat(null)&nbsp;returns null.</li>
+    <li>If expression&nbsp;is a floating point number, it will be returned unchanged.</li>
+    <li>If the parsing fails, null&nbsp;will be returned.</li>
+  </ul>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;toFloat('11.5'), toFloat('not a number') $$) as&nbsp;(a_float agtype, not_a_float agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>a_float</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>not_a_float</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>11.5</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>NULL</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>toInteger()</p>
+  <p>toInteger()&nbsp;converts a floating point or string value to an integer value.</p>
+  <p>Syntax:toInteger(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype Integer.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns an agtype number or agtype string value.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>toInteger(null)&nbsp;returns null.</li>
+    <li>If expression&nbsp;is an integer value, it will be returned unchanged.</li>
+    <li>If the parsing fails, null&nbsp;will be returned.</li>
+  </ul>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp; RETURN&nbsp;toInteger('42'), toInteger('not a number') $$) as&nbsp;(an_integer agtype, not_an_integer agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>an_integer</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>not_an_integer</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>42</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>NULL</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>coalesce()</p>
+  <p>coalesce()&nbsp;returns the first non-null&nbsp;value in the given list of expressions.</p>
+  <p>Syntax:coalesce(expression [, expression]*)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>The type of the value returned will be that of the first non-null expression.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression which may return null.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>null&nbsp;will be returned if all the arguments are null.</li>
+  </ul>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$MATCH&nbsp;(a)WHERE&nbsp;a.name = 'Alice'RETURN&nbsp;coalesce(a.hairColor, a.eyes), a.hair_color, a.eyes $$) as&nbsp;(color agtype, hair_color agtype, eyes agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Table 105.</p>
+  <p>Result</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>color</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>hair_color</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>eyes</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>“brown”</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>NULL</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>“Brown”</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h4>Logarithmic Functions</h4>
+  <p>e()</p>
+  <p>e()&nbsp;returns the base of the natural logarithm, e.</p>
+  <p>Syntax:e()</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;e() $$) as&nbsp;(e agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Results</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>e</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>&nbsp;2.71828182845905</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>sqrt()</p>
+  <p>sqrt() returns the square root of a number.</p>
+  <p>Syntax:sqrt(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;sqrt(144) $$) as&nbsp;(results agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Results</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>results</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>12</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>exp()</p>
+  <p>exp()&nbsp;returns e^n, where e&nbsp;is the base of the natural logarithm, and n&nbsp;is the value of the argument expression.</p>
+  <p>Syntax: e(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>exp(null)&nbsp;returns null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;e(2) $$) as&nbsp;(e agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>e&nbsp;to the power of 2&nbsp;is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>e</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>7.38905609893065</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>log()</p>
+  <p>log()&nbsp;returns the natural logarithm of a number.</p>
+  <p>Syntax:log(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>log(null)&nbsp;returns null.</li>
+    <li>log(0)&nbsp;returns null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;log(27) $$) as&nbsp;(natural_logarithm agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The natural logarithm of 27&nbsp;is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>natural_logarithm</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>3.295836866004329</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>log10()</p>
+  <p>log10() returns the common logarithm (base 10) of a number.</p>
+  <p>Syntax:log10(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>log10(null) returns null.</li>
+    <li>log10(0) returns null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;log(27) $$) as&nbsp;(natural_logarithm agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The common logarithm of 27 is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>natural_logarithm</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1.4313637641589874</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h4>Trigonometric Functions</h4>
+  <p>degrees()</p>
+  <p>degrees()&nbsp;converts radians to degrees.</p>
+  <p>Syntax:degrees(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression that represents the angle in radians.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>degrees(null)&nbsp;returns null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;degrees(3.14159) $$) as&nbsp;(deg agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The number of degrees in something close to pi is returned.</p>
+  <p>Results:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>deg</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>179.99984796050427</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>radians()</p>
+  <p>radians() converts radians to degrees.</p>
+  <p>Syntax:radians(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression that represents the angle in degrees.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>radians(null) returns null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;radians(180) $$) as&nbsp;(rad agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The number of degrees in something close to pi is returned.</p>
+  <p>Results:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>rad</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>3.14159265358979</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>pi()</p>
+  <p>pi()&nbsp;returns the mathematical constant pi.</p>
+  <p>Syntax: pi()</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;pi() $$) as&nbsp;(p agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The constant pi is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>p</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>3.141592653589793</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>sin()</p>
+  <p>sin()&nbsp;returns the sine of a number.</p>
+  <p>Syntax:sin(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression&nbsp;that represents the angle in radians.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>sin(null)&nbsp;returns null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;sin(0.5) $$) as&nbsp;(s agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The sine of 0.5&nbsp;is returned.</p>
+  <p>Results:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>s</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>0.479425538604203</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>cos()</p>
+  <p>cos() returns the cosine of a number.</p>
+  <p>Syntax: cos(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype expression&nbsp;that represents the angle in radians.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>cos(null) returns null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;cosin(0.5) $$) as&nbsp;(c agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The cosine of 0.5 is returned.</p>
+  <p>Results:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>c</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>0.8775825618903728</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>tan()</p>
+  <p>tan() returns the tangent of a number.</p>
+  <p>Syntax: tan(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression&nbsp;that represents the angle in radians.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>tan(null) returns null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;tan(0.5) $$) as&nbsp;(t agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The tangent of 0.5 is returned.</p>
+  <p>Results:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>t</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>0.5463024898437905</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>asin()</p>
+  <p>asin() returns the arcsine of a number.</p>
+  <p>Syntax:asin(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression&nbsp;that represents the angle in radians.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>asin(null) returns null.</li>
+    <li>If (expression&nbsp;&lt; -1) or (expression&nbsp;&gt; 1), then (asin(expression)) returns null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;asin(0.5) $$) as&nbsp;(s agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The arcsine of 0.5 is returned.</p>
+  <p>Results:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>s</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>0.523598775598299</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>acos()</p>
+  <p>acos() returns the arccosine of a number.</p>
+  <p>Syntax:acos(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression&nbsp;that represents the angle in radians.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>acos(null) returns null.</li>
+    <li>If (expression &lt; -1) or (expression &gt; 1), then (acos(expression)) returns null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;acos(0.5) $$) as&nbsp;(arc_c agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The arccosine of 0.5 is returned.</p>
+  <p>Results:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>arc_c</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1.0471975511965979</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>atan()</p>
+  <p>atan() returns the arctangent of a number.</p>
+  <p>Syntax:atan(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression&nbsp;that represents the angle in radians.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>atan(null) returns null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;atan(0.5) $$) as&nbsp;(arc_t agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The arccosine of 0.5 is returned.</p>
+  <p>Results:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>arc_t</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>0.463647609000806</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>atan2()</p>
+  <p>atan2() returns the arctangent2 of a set of coordinates in radians.</p>
+  <p>Syntax: atan2(expression1, expression2)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression1</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression for y that represents the angle in radians.</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression2</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression for x that represents the angle in radians.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>atan2(null, null), atan2(null, expression2)&nbsp;and atan(expression1, null)&nbsp;all return null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;atan2(0.5, 0.6) $$) as&nbsp;(arc_t2 agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The arctangent2 of 0.5&nbsp;and 0.6&nbsp;is returned.</p>
+  <p>Results:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>arc_t2</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>0.694738276196703</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h4>String Functions</h4>
+  <p>replace()</p>
+  <p>replace()&nbsp;returns a string in which all occurrences of a specified string in the original string have been replaced by another (specified) string.</p>
+  <p>Syntax: replace(original, search, replace)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype String.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>original</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a string.</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>search</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that specifies the string to be replaced in original.</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>replace</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that specifies the replacementstring.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>If any argument is null, null&nbsp;will be returned.</li>
+    <li>If search&nbsp;is not found in original, original&nbsp;will be returned.</li>
+  </ul>
+  <table>
+    <tbody>
+      <tr>
+        <td></td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RETURN&nbsp;replace('hello', 'l', 'w') $$) as&nbsp;(str_array agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>new_str</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>“Hewwo”</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>split()</p>
+  <p>split()&nbsp;returns a list of strings resulting from the splitting of the original string around matches of the given delimiter.</p>
+  <p>Syntax: split(original, split_delimiter)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype list of agtype strings.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>original</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a string.</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>split_delimiter</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>The string with which to split original.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>split(null, splitDelimiter)&nbsp;and split(original, null)&nbsp;both return null</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;split('one,two', ',') $$) as&nbsp;(split_list agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>split_list</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>[“one”,”two”]</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>left()</p>
+  <p>left()&nbsp;returns a string containing the specified number of leftmost characters of the original string.</p>
+  <p>Syntax: left(original, length)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype String.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>original</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a string.</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>n</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a positive integer.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>left(null, length)&nbsp;and left(null, null)&nbsp;both return null</li>
+    <li>left(original, null)&nbsp;will raise an error.</li>
+    <li>If length&nbsp;is not a positive integer, an error is raised.</li>
+    <li>If length&nbsp;exceeds the size of original, original&nbsp;is returned.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT * FROM cypher('graph_name', $$ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;RETURN left('Hello', 3) $$) as (new_str agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>new_str</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>“Hel”</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>right()</p>
+  <p>right() returns a string containing the specified number of rightmost characters of the original string.</p>
+  <p>Syntax: right(original, length)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype String.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>original</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a string.</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>n</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a positive integer.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>right(null, length) and right(null, null) both return null</li>
+    <li>right(original, null) will raise an error.</li>
+    <li>If length is not a positive integer, an error is raised.</li>
+    <li>If length exceeds the size of original, original is returned.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;right('hello', 3) $$) as&nbsp;(new_str agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>new_str</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>“llo”</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>substring()</p>
+  <p>substring()&nbsp;returns a substring of the original string, beginning with a 0-based index start and length.</p>
+  <p>Syntax: substring(original, start&nbsp;[, length])</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype String.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>original</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a string.</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>start</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression denoting the position at which the substring will begin.</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>length</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An optional expression that returns a positive integer, denoting how many characters of the original expression will be returned.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>start&nbsp;uses a zero-based index.</li>
+    <li>If length&nbsp;is omitted, the function returns the substring starting at the position given by start&nbsp;and extending to the end of original.</li>
+    <li>If original&nbsp;is null, null&nbsp;is returned.</li>
+    <li>If either start&nbsp;or length&nbsp;is null&nbsp;or a negative integer, an error is raised.</li>
+    <li>If start&nbsp;is 0, the substring will start at the beginning of original.</li>
+    <li>If length&nbsp;is 0, the empty string will be returned.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;substring('hello', 1, 3), substring('hello', 2) $$) as&nbsp;(sub_str1&nbsp;agtype, sub_str2&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>sub_str1</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>sub_str2</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>‘ell’</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>‘llo’</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>rTrim()</p>
+  <p>rTrim()&nbsp;returns the original string with trailing whitespace removed.</p>
+  <p>Syntax: rTrim(original)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype String.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>original</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a string</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>rTrim(null)&nbsp;returns null</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;rTrim(' hello ') $$) as&nbsp;(trimmed_str agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>trimmed_str</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>" hello"</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>lTrim()</p>
+  <p>lTrim() returns the original string with trailing whitespace removed.</p>
+  <p>Syntax: lTrim(original)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A String.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>original</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a string</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>lTrim(null) returns null</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;lTrim(' hello ') $$) as&nbsp;(trimmed_str agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>left_trimmed_str</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>“hello ”</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>trim()</p>
+  <p>trim() returns the original string with leading and trailing whitespace removed.</p>
+  <p>Syntax: trim(original)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype String.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>original</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a string</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>trim(null) returns null</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;trim(' hello ') $$) as&nbsp;(trimmed_str agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>trimmed_str</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>“hello”</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>toLower</p>
+  <p>toLower()&nbsp;returns the original string in lowercase.</p>
+  <p>Syntax: toLower(original)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype String.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>original</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a string</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>toLower(null)&nbsp;returns null</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;toLower('HELLO') $$) as&nbsp;(lower_str agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>lower_str</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>“hello”</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>toUpper()</p>
+  <p>toUpper() returns the original string in lowercase.</p>
+  <p>Syntax: toUpper(original)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype String.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>original</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a string</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>toUpper(null) returns null</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;toUpper('hello') $$) as&nbsp;(upper_str agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>upper_str</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>“HELLO”</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>reverse()</p>
+  <p>reverse()&nbsp;returns a string in which the order of all characters in the original string have been reversed.</p>
+  <p>Syntax: reverse(original)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype String.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>original</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a string</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>reverse(null)&nbsp;returns null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;reverse("hello") $$) as&nbsp;(upper_str agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>upper_str</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>“olleh”</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>toString()</p>
+  <p>toString()&nbsp;converts an integer, float or boolean value to a string.</p>
+  <p>Syntax:toString(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A String.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression that returns a number, a boolean, or a string.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>toString(null)&nbsp;returns null</li>
+    <li>If expression&nbsp;is a string, it will be returned unchanged.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;toString(11.5),toString('a string'), toString(true) $$) as&nbsp;(float_to_str agtype, str_to_str agtype, bool_to_string);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>float_to_str</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>str_to_str</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>bool_to_str</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>"11.5"</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>"a string"</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>"true"</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h4>Numeric Functions</h4>
+  <p>rand()</p>
+  <p>rand()&nbsp;returns a random floating point number in the range from 0 (inclusive) to 1 (exclusive); i.e.[0,1). The numbers returned follow an approximate uniform distribution.</p>
+  <p>Syntax: rand()</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;rand() $$) as&nbsp;(r agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>A random number is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>r</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>0.3586784748902053</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>abs()</p>
+  <p>abs()&nbsp;returns the absolute value of the given number.</p>
+  <p>Syntax: abs(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>The type of the value returned will be that of expression.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>abs(null)&nbsp;returns null.</li>
+    <li>If expression&nbsp;is negative, -(expression)&nbsp;(i.e. the negation of expression) is returned.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(a), (e) WHERE&nbsp;a.name = 'Alice'&nbsp;AND&nbsp;e.name = 'Eskil' &nbsp; &nbsp;RETURN&nbsp;a.age, e.age, abs(a.age - e.age) $$) as&nbsp;(alice_age agtype, eskil_age agtype, difference&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The absolute value of the age difference is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>alice_age</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>eskil_age</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>difference</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>38</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>41</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>3</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>ceil()</p>
+  <p>ceil()&nbsp;returns the smallest floating point number that is greater than or equal to the given number and equal to a mathematical integer.</p>
+  <p>Syntax: ceil(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>ceil(null)&nbsp;returns null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;ceil(0.1) $$) as&nbsp;(cil agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The ceiling of 0.1&nbsp;is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>&nbsp;cil</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>floor()</p>
+  <p>floor() returns the greatest floating point number that is less than or equal to the given number and equal to a mathematical integer.</p>
+  <p>Syntax: floor(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>&nbsp;</p>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>floor(null) returns null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;floor(0.1) $$) as&nbsp;(flr agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The floor of 0.1 is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>flr</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>0</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>round()</p>
+  <p>round()&nbsp;returns the value of the given number rounded to the nearest integer.</p>
+  <p>Syntax: round(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>`</p>
+  <p>Considerations:</p>
+  <ul>
+    <li>round(null)&nbsp;returns null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;round(3.141592) $$) as&nbsp;(rounded_value agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>3.0&nbsp;is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>rounded_value</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>3.0</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>sign()</p>
+  <p>sign() returns the signum of the given number: 0 if the number is 0, -1 for any negative number, and 1 for any positive number</p>
+  <p>Syntax:sign(expression)</p>
+  <p>Returns:</p>
+  <p>An Integer.</p>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>sign(null) returns null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;RETURN&nbsp;sign(-17), sign(0.1), sign(0) $$) as&nbsp;(negative_sign&nbsp;agtype, positive_sign&nbsp;agtype, zero_sign agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The signs of -17 and 0.1 are returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>negative_sign</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>positive_sign</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>zero_sign</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>-1</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>1</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>0</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="3" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h4>Aggregation Functions</h4>
+  <p>min()</p>
+  <p>min()&nbsp;returns the minimum value in a set of values.</p>
+  <p>Syntax: min(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A property type, or a list, depending on the values returned by expression.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression returning a set containing any combination of property types and lists thereof.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>Any null&nbsp;values are excluded from the calculation.</li>
+    <li>In a mixed set, any string value is always considered to be lower than any numeric value, and anylist is always considered to be lower than any string.</li>
+    <li>Lists are compared in dictionary order, i.e. list elements are compared pairwise in ascending order from the start of the list to the end.</li>
+    <li>min(null)&nbsp;returns null.</li>
+  </ul>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(v:Person) &nbsp; &nbsp;RETURN&nbsp;min(v.age) $$) as&nbsp;(min_age&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>min_age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>21</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Using min() with Lists</p>
+  <p>Data Setup:</p>
+  <p>To clarify the following example, assume the next three commands are run first:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$</p>
+          <p>&nbsp; &nbsp; CREATE&nbsp;(:min_test {val:'d'})</p>
+          <p>$$) as&nbsp;(result&nbsp;agtype); SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$</p>
+          <p>&nbsp; &nbsp; CREATE&nbsp;(:min_test {val:['a', 'b', 23]})</p>
+          <p>$$) as&nbsp;(result&nbsp;agtype); SELECT&nbsp;* FROM&nbsp;cypher('graph_name', $$</p>
+          <p>&nbsp; &nbsp; CREATE&nbsp;(:min_test {val:['a', 'b', 23]})</p>
+          <p>$$) as&nbsp;(result&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(v:min_test) &nbsp; &nbsp;RETURN&nbsp;min(v.val) $$) as&nbsp;(min_val agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The lowest of all the values in the set—in this case, the list ['a', 'c', 23]—is returned, as (i) the two lists are considered to be lower values than the string "d", and (ii) the string "a" is considered tobe a lower value than the numerical value 1.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>min_age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>["a", "b", 23]</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>max()</p>
+  <p>max() returns the maximum value in a set of values.</p>
+  <p>Syntax: max(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>A property type, or a list, depending on the values returned by expression.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression returning a set containing any combination of property types and lists thereof.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>Any null values are excluded from the calculation.</li>
+    <li>In a mixed set, any numeric value is always considered to be higher than any string value, and anystring value is always considered to be higher than any list.</li>
+    <li>Lists are compared in dictionary order, i.e. list elements are compared pairwise in ascending order from the start of the list to the end.</li>
+    <li>max(null) returns null.</li>
+  </ul>
+  <p>Query:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n:Person) &nbsp; &nbsp;RETURN&nbsp;max(n.age) $$) as&nbsp;(max_age agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The highest of all the values in the property age is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>min_age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>44</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>stDev()</p>
+  <p>stDev()&nbsp;returns the standard deviation for the given value over a group. It uses a standard two-pass method, with N - 1&nbsp;as the denominator, and should be used when taking a sample of the population for an unbiased estimate. When the standard variation of the entire population is being calculated, stdDevP&nbsp;should be used.</p>
+  <p>Syntax: stDev(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>Any null&nbsp;values are excluded from the calculation.</li>
+    <li>stDev(null)&nbsp;returns 0.</li>
+  </ul>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; MATCH&nbsp;(n:Person) &nbsp; RETURN&nbsp;stDev(n.age) $$) as&nbsp;(stdev_age agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The standard deviation of the values in the property age&nbsp;is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>stdev_age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>15.716233645501712</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>stDevP()</p>
+  <p>stDevP()&nbsp;returns the standard deviation for the given value over a group. It uses a standard two-pass method, with N&nbsp;as the denominator, and should be used when calculating the standard deviation for an entire population. When the standard variation of only a sample of the population is being calculated, stDev&nbsp;should be used.</p>
+  <p>Syntax: stDevP(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>Any null&nbsp;values are excluded from the calculation.</li>
+    <li>stDevP(null)&nbsp;returns 0.</li>
+  </ul>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n:Person) &nbsp; &nbsp;RETURN&nbsp;stDevP(n.age) $$ as&nbsp;(stdevp_age agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The population standard deviation of the values in the property age&nbsp;is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>stdevp_age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>12.832251036613439</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>percentileCont()</p>
+  <p>percentileCont()&nbsp;returns the percentile of the given value over a group, with a percentile from 0.0 to 1.0. It uses a linear interpolation method, calculating a weighted average between two values if the desired percentile lies between them. For nearest values using a rounding method, see percentileDisc.</p>
+  <p>Syntax: percentileCont(expression, percentile)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>percentile</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number value between 0.0 and 1.0</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>Any null&nbsp;values are excluded from the calculation.</li>
+    <li>percentileCont(null, percentile)&nbsp;returns null.</li>
+  </ul>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n:Person) &nbsp; &nbsp;RETURN&nbsp;percentileCont(n.age, 0.4) $$ as&nbsp;(percentile_cont_age&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The 40th percentile of the values in the property age&nbsp;is returned, calculated with a weighted average. In this case, 0.4 is the median, or 40th percentile.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>percentile_cont_age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>29.0</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>percentileDisc()</p>
+  <p>percentileDisc()&nbsp;returns the percentile of the given value over a group, with a percentile from 0.0to 1.0. It uses a rounding method and calculates the nearest value to the percentile. For interpolated values, see percentileCont.</p>
+  <p>Syntax: percentileDisc(expression, percentile)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype Float.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number expression</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>percentile</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An agtype number value between 0.0 and 1.0</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>Any null&nbsp;values are excluded from the calculation.</li>
+    <li>percentileDisc(null, percentile)&nbsp;returns null.</li>
+  </ul>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n:Person) &nbsp; &nbsp;RETURN&nbsp;percentileDisc(n.age, 0.5) $$ as&nbsp;(percentile_disc_age&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The 50th percentile of the values in the property age&nbsp;is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>percentile_cont_age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>33</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>count()</p>
+  <p>count()&nbsp;returns the number of values or records, and appears in two variants:</p>
+  <ul>
+    <li>count(*)&nbsp;returns the number of matching records</li>
+    <li>count(expr)&nbsp;returns the number of non-null&nbsp;values returned by an expression.</li>
+  </ul>
+  <p>Syntax: count(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype Integer.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>count(*)&nbsp;includes records returning null.</li>
+    <li>count(expr)&nbsp;ignores null&nbsp;values.</li>
+    <li>count(null)&nbsp;returns 0.</li>
+    <li>Using count(*)&nbsp;to return the number of nodes</li>
+    <li>count(*)&nbsp;can be used to return the number of nodes; for example, the number of nodes connected to some node n.</li>
+  </ul>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n {name: 'A'})-[]-&gt;(x) &nbsp; &nbsp;RETURN&nbsp;n.age, count(*) $$ as&nbsp;(age agtype, number_of_people agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The labels and age&nbsp;property of the start node n&nbsp;and the number of nodes related to n&nbsp;are returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>age</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>number_of_people</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>13</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>3</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Using count(*)&nbsp;to group and count relationship typescount(*)&nbsp;can be used to group relationship types and return the number.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n {name: 'A'})-[r]-&gt;() &nbsp; &nbsp;RETURN&nbsp;type(r), count(*) $$ as&nbsp;(label agtype, count&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The relationship types and their group count are returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>label</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>count</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>“KNOWS”</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>3</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="2" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Using count(expression) to return the number of values</p>
+  <p>Instead of simply returning the number of records with count(*), it may be more useful to return the actual number of values returned by an expression.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n {name: 'A'})-[]-&gt;(x) &nbsp; &nbsp;RETURN&nbsp;count(x) $$) as&nbsp;(count&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The number of nodes connected to the start node is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>count</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>3</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Counting non-null values</p>
+  <p>count(expression)&nbsp;can be used to return the number of non-null&nbsp;values returned by the expression.</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$ &nbsp; &nbsp;MATCH&nbsp;(n:Person) &nbsp; &nbsp;RETURN&nbsp;count(n.age) $$) as&nbsp;(count&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The number of :Person&nbsp;nodes having an age&nbsp;property is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>count</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>3</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>avg()</p>
+  <p>avg()&nbsp;returns the average of a set of numeric values.</p>
+  <p>Syntax: avg(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype Integer</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression&nbsp;returning a set of numeric values.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>Any null&nbsp;values are excluded from the calculation.</li>
+    <li>avg(null)&nbsp;returns null.</li>
+  </ul>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$MATCH&nbsp;(n:Person)RETURN&nbsp;avg(n.age) $$) as&nbsp;(avg_age&nbsp;agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The average of all the values in the property age&nbsp;is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>avg_age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>30.0</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>sum</p>
+  <p>sum()&nbsp;returns the sum of a set of numeric values.</p>
+  <p>Syntax: sum(expression)</p>
+  <p>Returns:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>An agtype Float</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Arguments:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>Name</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>Description</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>expression</p>
+        </td>
+        <td colspan="1" rowspan="1">
+          <p>An expression&nbsp;returning a set of numeric values.</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Considerations:</p>
+  <ul>
+    <li>Any null&nbsp;values are excluded from the calculation.</li>
+    <li>sum(null)&nbsp;returns 0.</li>
+  </ul>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$MATCH&nbsp;(n:Person)RETURN&nbsp;sum(n.age) $$ as&nbsp;(total_age agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>The sum of all the values in the property age&nbsp;is returned.</p>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>total_age</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>90</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <h3>User defined functions</h3>
+  <p>Users may add custom functions to the AGE. When using the Cypher function, all function calls with a Cypher query use the default namespace of: ag_catalog. However if a user want to use a function outside this namespace, they may do so by adding the namespace before the function name.</p>
+  <p>Syntax: namespace_name.function_name</p>
+  <p>Query</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>SELECT&nbsp;*FROM&nbsp;cypher('graph_name', $$RETURN&nbsp;pg_catalog.sqrt(25) $$ as&nbsp;(result agtype);</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <p>Result:</p>
+  <table>
+    <tbody>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>result</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>25</p>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="1" rowspan="1">
+          <p>1 row(s) returned</p>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</body>
+</html>
