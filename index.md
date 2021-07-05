@@ -61,7 +61,7 @@ undefined internal link to this URL: "#heading=h.3n5ae0fn0fos".link text: AGE Qu
 WARNING:
 You have 4 H1 headings. You may want to use the "H1 -> H2" option to demote all headings by one level.
 
------>
+
 
 
 <p style="color: red; font-weight: bold">>>>>>  gd2md-html alert:  ERRORs: 8; WARNINGs: 1; ALERTS: 8.</p>
@@ -78,7 +78,7 @@ You have 4 H1 headings. You may want to use the "H1 -> H2" option to demote all 
 
 <p style="color: red; font-weight: bold">>>>>> PLEASE check and correct alert issues and delete this message and the inline alerts.<hr></p>
 
-
+----->
 
 [TOC]
 
