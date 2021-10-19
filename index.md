@@ -1702,11 +1702,11 @@ Result:
   </tr>
   <tr>
    <td>[
-<p>
+
     {"id": 0, "label": "label_name_1", "properties": {"i": 0}}::vertex,
-<p>
+
     {"id": 2, "label": "edge_label", "end_id": 1, "start_id": 0, "properties": {"i": 0}}::edge, 
-<p>
+
     {"id": 1, "label": "label_name_2", "properties": {}}::vertex
 <p>
 ]::path
