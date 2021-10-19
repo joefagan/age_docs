@@ -1676,8 +1676,8 @@ A path is a series of alternating vertices and edges. A path must start with a v
 ## Type Casting a Map to a Path
 
 Query
-
-
+<!-----
+There's a problem with this query/table displaying on github hosted webpage. Works fine in VSCode
 ```
 SELECT *
 FROM cypher('graph_name', $$
@@ -1693,7 +1693,7 @@ $$) AS (p agtype);
 The result is formatted to improve readability
 
 Result:
-<!-----
+
 There's a problem with this table displaying on github hosted webpage. Works fine in VSCode
 <table>
   <tr>
