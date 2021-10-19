@@ -190,7 +190,6 @@ You have 4 H1 headings. You may want to use the "H1 -> H2" option to demote all 
     - [Terminal CREATE clauses](#terminal-create-clauses)
     - [Create Vertices](#create-vertices)
     - [Create single vertex](#create-single-vertex)
-    - [\\](#%5C%5C)
     - [Create a vertex with a label](#create-a-vertex-with-a-label)
     - [Create vertex and add labels and properties](#create-vertex-and-add-labels-and-properties)
     - [Return created node](#return-created-node)
