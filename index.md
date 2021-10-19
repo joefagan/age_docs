@@ -4137,7 +4137,7 @@ Result
 
 
 ## Create a full path
-
+v1
 When you use CREATE and a pattern, all parts of the pattern that are not already in scope at this time will be created.
 
 Query
@@ -4156,33 +4156,31 @@ This query creates three nodes and two relationships in one go, assigns it to a 
 
 Result
 <table>
-    <tr>
-       <td><strong>p</strong>
-       </td>
-    </tr>
-    <tr>
-       <td>
-          [{id:0; label: ‘’; properties:{name:’Andres’}}::vertex,
-       </td>
-    </tr>
-    <tr>
-       <td>{id: 3; startid: 0, endid: 1; label: ‘WORKS_AT’; properties: {}}::edge,</td>
-    </tr>
-    <tr>
-       <td>{id:1; label: ‘’; properties: {}}::vertex</td>
-    </tr>
-    <tr>
-       <td>{id: 3; startid: 2, endid: 1; label: ‘WORKS_AT’; properties: {}}::edge,</td>
-    </tr>
-    <tr>
-       <td>{id:2; label: ‘’; properties: {name:’Michael’}}::vertex]::path</td>
-    </tr>
-    <tr>
-       <td>(1 row)
-       </td>
-    </tr>
- </table>
-
+	<tr>
+		<td><strong>p</strong></td>
+	</tr>
+	<tr>
+		<td>
+			[{id:0; label: ‘’; properties:{name:’Andres’}}::vertex,
+		</td>
+	</tr>
+	<tr>
+		<td>{id: 3; startid: 0, endid: 1; label: ‘WORKS_AT’; properties: {}}::edge,</td>
+	</tr>
+	<tr>
+		<td>{id:1; label: ‘’; properties: {}}::vertex</td>
+	</tr>
+	<tr>
+		<td>{id: 3; startid: 2, endid: 1; label: ‘WORKS_AT’; properties: {}}::edge,</td>
+	</tr>
+	<tr>
+		<td>{id:2; label: ‘’; properties: {name:’Michael’}}::vertex]::path</td>
+	</tr>
+	<tr>
+		<td>(1 row)
+		</td>
+	</tr>
+</table>
 
 
 ### SET
