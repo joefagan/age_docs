@@ -681,10 +681,9 @@ We use the following terms below: The _precision_ of a numeric is the total coun
 Without any precision or scale creates a column in which numeric values of any precision and scale can be stored, up to the implementation limit on precision. <!-- fix above sentence --> A column of this kind will not coerce input values to any particular scale, whereas numeric columns with a declared scale will coerce input values to that scale. (The SQL standard requires a default scale of 0, i.e., coercion to integer precision. We find this a bit useless. If you're concerned about portability, always specify the precision and scale explicitly.)
 
 
-```
-Note
-The maximum allowed precision when explicitly specified in the type declaration is 1000; NUMERIC without a specified precision is subject to the limits described in Table 8.2.
-```
+
+_Note
+The maximum allowed precision when explicitly specified in the type declaration is 1000; NUMERIC without a specified precision is subject to the limits described in Table 8.2._
 
 
 If the scale of a value to be stored is greater than the declared scale of the column, the system will round the value to the specified number of fractional digits. Then, if the number of digits to the left of the decimal point exceeds the declared precision minus the declared scale, an error is raised.
@@ -694,10 +693,9 @@ Numeric values are physically stored without any extra leading or trailing zeroe
 In addition to ordinary numeric values, the numeric type allows the special value NaN, meaning “not-a-number”. Any operation on NaN yields another NaN. When writing this value as a constant in an SQL command, you must put quotes around it, for example UPDATE table SET x = 'NaN'. 
 
 
-```
-Note
-In most implementations of the "not-a-number" concept, NaN is considered not equal to any other numeric value (including NaN). However, in order to allow floats to be sorted correctly, AGE evaluates 'NaN'::numeric = 'NaN':numeric to true. See the section Comparability and Equality for more details.
-```
+
+_Note
+In most implementations of the "not-a-number" concept, NaN is considered not equal to any other numeric value (including NaN). However, in order to allow floats to be sorted correctly, AGE evaluates 'NaN'::numeric = 'NaN':numeric to true. See the section Comparability and Equality for more details._
 
 
 When rounding values, the numeric type rounds ties away from zero, while (on most machines) the real and double precision types round ties to the nearest even number. For example:
