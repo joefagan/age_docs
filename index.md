@@ -80,7 +80,208 @@ You have 4 H1 headings. You may want to use the "H1 -> H2" option to demote all 
 
 ----->
 
-[TOC]
+<!-- TOC -->
+
+- [Apache AGE](#apache-age)
+    - [Setup](#setup)
+        - [Getting AGE](#getting-age)
+        - [Pre-Installation](#pre-installation)
+        - [Installation](#installation)
+        - [Post Installation](#post-installation)
+- [Features](#features)
+    - [Graphs](#graphs)
+        - [Create a Graph](#create-a-graph)
+    - [create_graph](#create_graph)
+        - [Delete a Graph](#delete-a-graph)
+    - [drop_graph](#drop_graph)
+        - [A Cypher Graph vs A Postgres Namespace](#a-cypher-graph-vs-a-postgres-namespace)
+    - [Data Types - An Introduction to agtype](#data-types---an-introduction-to-agtype)
+        - [Simple Data Types](#simple-data-types)
+    - [Agtype NULL vs Postgres NULL](#agtype-null-vs-postgres-null)
+        - [Composite Data Types](#composite-data-types)
+    - [Lists in general](#lists-in-general)
+    - [NULL in a List](#null-in-a-list)
+    - [Access Individual Elements](#access-individual-elements)
+    - [Map Elements in Lists](#map-elements-in-lists)
+    - [Accessing Map Elements in Lists](#accessing-map-elements-in-lists)
+    - [Negative Index Access](#negative-index-access)
+    - [Index Ranges](#index-ranges)
+    - [Negative Index Ranges](#negative-index-ranges)
+    - [Positive Slices](#positive-slices)
+    - [Negative Slices](#negative-slices)
+    - [Literal Maps with Simple Data Types](#literal-maps-with-simple-data-types)
+    - [Literal Maps with Composite Data Types](#literal-maps-with-composite-data-types)
+    - [Property Access of a map](#property-access-of-a-map)
+    - [Accessing List Elements in Maps](#accessing-list-elements-in-maps)
+        - [Simple Entities](#simple-entities)
+    - [GraphId](#graphid)
+    - [Labels](#labels)
+    - [Properties](#properties)
+    - [Type Casting a Map to a Vertex](#type-casting-a-map-to-a-vertex)
+    - [Type Casting a Map to an Edge](#type-casting-a-map-to-an-edge)
+        - [Composite Entities](#composite-entities)
+    - [Type Casting a Map to a Path](#type-casting-a-map-to-a-path)
+    - [Comparability, Equality, Orderability and Equivalence](#comparability-equality-orderability-and-equivalence)
+        - [Concepts](#concepts)
+    - [Comparability](#comparability)
+    - [Equality](#equality)
+    - [Orderabilityy](#orderabilityy)
+    - [Equivalencee](#equivalencee)
+        - [Comparability and equality](#comparability-and-equality)
+    - [Comparability](#comparability)
+    - [Orderability Between different Agtypes](#orderability-between-different-agtypes)
+    - [Operator Precedence](#operator-precedence)
+    - [The AGE Cypher Query Format](#the-age-cypher-query-format)
+    - [Cypher](#cypher)
+    - [SELECT Clause](#select-clause)
+    - [Using CREATE with CTEs](#using-create-with-ctes)
+    - [Type Casting](#type-casting)
+        - [Type Casting in Cypher](#type-casting-in-cypher)
+        - [Type Casting to Postgres Data Types](#type-casting-to-postgres-data-types)
+        - [Type Coercion With the Cypher Function](#type-coercion-with-the-cypher-function)
+    - [Aggregation](#aggregation)
+    - [Prepared Statements](#prepared-statements)
+    - [Cypher Parameter Format](#cypher-parameter-format)
+    - [Prepared Statements Preparation](#prepared-statements-preparation)
+    - [Prepared Statements Execution](#prepared-statements-execution)
+    - [Clauses](#clauses)
+        - [MATCH](#match)
+    - [Basic vertex finding](#basic-vertex-finding)
+    - [Get all Vertices](#get-all-vertices)
+    - [Get all vertices with a label](#get-all-vertices-with-a-label)
+    - [Related Vertices](#related-vertices)
+    - [Match with labels](#match-with-labels)
+    - [Edge basics](#edge-basics)
+    - [Outgoing Edges](#outgoing-edges)
+    - [Directed Edges and variable](#directed-edges-and-variable)
+    - [Match on edge type](#match-on-edge-type)
+    - [Match on edge type and use a variable](#match-on-edge-type-and-use-a-variable)
+    - [Multiple Edges](#multiple-edges)
+        - [WITH](#with)
+    - [Filter on results](#filter-on-results)
+        - [RETURN](#return)
+    - [Return nodes](#return-nodes)
+    - [Return edges](#return-edges)
+    - [Return property](#return-property)
+    - [Variable with uncommon characters](#variable-with-uncommon-characters)
+    - [Aliasing a field](#aliasing-a-field)
+    - [Optional properties](#optional-properties)
+    - [Other expressions](#other-expressions)
+    - [Unique results](#unique-results)
+        - [ORDER BY](#order-by)
+    - [Introduction](#introduction)
+    - [Order nodes by property](#order-nodes-by-property)
+    - [Order nodes by multiple properties](#order-nodes-by-multiple-properties)
+    - [Order nodes in descending order](#order-nodes-in-descending-order)
+    - [Ordering null](#ordering-null)
+        - [WHERE](#where)
+    - [Filter on a Vertex Property](#filter-on-a-vertex-property)
+    - [Filter on an Edge Property](#filter-on-an-edge-property)
+    - [Using Multiple Filters](#using-multiple-filters)
+    - [Filter On Properties With STARTS WITH](#filter-on-properties-with-starts-with)
+    - [Filter On Properties With ENDS WITH](#filter-on-properties-with-ends-with)
+    - [Filter On Properties With CONTAINS](#filter-on-properties-with-contains)
+    - [Filter On Properties With Exists](#filter-on-properties-with-exists)
+    - [Filter On Patterns With Exists](#filter-on-patterns-with-exists)
+    - [Filter on patterns using NOT](#filter-on-patterns-using-not)
+    - [Filter on patterns with properties](#filter-on-patterns-with-properties)
+    - [IN Operator with Lists](#in-operator-with-lists)
+        - [CREATE](#create)
+    - [Terminal CREATE clauses](#terminal-create-clauses)
+    - [Create Vertices](#create-vertices)
+    - [Create single vertex](#create-single-vertex)
+    - [\\](#%5C%5C)
+    - [Create a vertex with a label](#create-a-vertex-with-a-label)
+    - [Create vertex and add labels and properties](#create-vertex-and-add-labels-and-properties)
+    - [Return created node](#return-created-node)
+    - [Create Edges](#create-edges)
+    - [Create an edge between two nodes](#create-an-edge-between-two-nodes)
+    - [Create an edge and set properties](#create-an-edge-and-set-properties)
+    - [Create a full path](#create-a-full-path)
+        - [SET](#set)
+    - [Terminal SET clauses](#terminal-set-clauses)
+    - [Set a property](#set-a-property)
+    - [Return created vertex](#return-created-vertex)
+    - [Remove a property](#remove-a-property)
+        - [REMOVE](#remove)
+    - [Terminal REMOVE clauses](#terminal-remove-clauses)
+    - [Remove a property](#remove-a-property)
+- [Functions](#functions)
+        - [Built-In functions:](#built-in-functions)
+    - [ExistsProperty](#existsproperty)
+    - [id](#id)
+    - [start_id](#start_id)
+    - [end_id](#end_id)
+    - [type](#type)
+    - [properties](#properties)
+    - [head](#head)
+    - [last](#last)
+    - [length](#length)
+    - [size](#size)
+    - [startNode](#startnode)
+    - [endNode](#endnode)
+    - [timestamp](#timestamp)
+    - [toBoolean](#toboolean)
+    - [toFloat](#tofloat)
+    - [toInteger](#tointeger)
+    - [coalesce](#coalesce)
+    - [e](#e)
+    - [sqrt](#sqrt)
+    - [exp](#exp)
+    - [log](#log)
+    - [log10](#log10)
+    - [degrees](#degrees)
+    - [radians](#radians)
+    - [pi](#pi)
+    - [sin](#sin)
+    - [cos](#cos)
+    - [tan](#tan)
+    - [asin](#asin)
+    - [acos](#acos)
+    - [atan](#atan)
+    - [atan2](#atan2)
+    - [replace](#replace)
+    - [split](#split)
+    - [left](#left)
+    - [right](#right)
+    - [substring](#substring)
+    - [rTrim](#rtrim)
+    - [lTrim](#ltrim)
+    - [trim](#trim)
+    - [toLower](#tolower)
+    - [toUpper](#toupper)
+    - [reverse](#reverse)
+    - [toString](#tostring)
+    - [rand](#rand)
+    - [abs](#abs)
+    - [ceil](#ceil)
+    - [floor](#floor)
+    - [round](#round)
+    - [sign](#sign)
+    - [min](#min)
+    - [Using min with Lists](#using-min-with-lists)
+    - [max](#max)
+    - [stDev](#stdev)
+    - [stDevP](#stdevp)
+    - [percentileCont](#percentilecont)
+    - [percentileDisc](#percentiledisc)
+    - [count](#count)
+    - [Using countexpression to return the number of values](#using-countexpression-to-return-the-number-of-values)
+    - [Counting non-null values](#counting-non-null-values)
+    - [avg](#avg)
+    - [sum](#sum)
+        - [User defined functions](#user-defined-functions)
+- [Advanced Cypher Queries](#advanced-cypher-queries)
+    - [CTE Clause](#cte-clause)
+    - [Join Clause](#join-clause)
+        - [Using CTEs with CREATE, REMOVE, and SET](#using-ctes-with-create-remove-and-set)
+    - [Using Cypher with expressions](#using-cypher-with-expressions)
+        - [Using Cypher with '='](#using-cypher-with-)
+        - [Working with Postgres's IN Clause](#working-with-postgress-in-clause)
+        - [Working with Postgres EXISTS Clause](#working-with-postgres-exists-clause)
+    - [Querying Multiple Graphs](#querying-multiple-graphs)
+
+<!-- /TOC -->
 
 
 
@@ -90,38 +291,43 @@ Apache AGE a PostgreSQL extension that provides graph database functionality. AG
 
 Below is a brief overview of the AGE architecture in relation to the PostgreSQL architecture and backend. Every component runs on the PostgreSQL transaction cache layer and storage layer.
 
-
 ## Setup
-
 
 ### Getting AGE
 
-
-#### Getting Source Code
-
+You can get the source code from github and build for your OS or get a docker image from docker hub and run AGE in a container.
 
 #### Apache AGE releases
 
 The release notes for each release can be found from one of the following links:
-
-
-
+* [Apache AGE 0.6.0](https://github.com/apache/incubator-age/releases/tag/v0.6.0)
+* [Apache AGE 0.5.0](https://github.com/apache/incubator-age/releases/tag/v0.5.0)
+* [Apache AGE 0.4.0](https://github.com/apache/incubator-age/releases/tag/0.4.0)
 * [Apache AGE 0.3.0](https://github.com/apache/incubator-age/releases/tag/v0.3.0.rc0-incubating)
 * [Apache AGE 0.2.0](https://github.com/apache/incubator-age/releases/tag/v0.2.0)
 * [Apache AGE 0.1.0](https://github.com/apache/incubator-age/releases/tag/v0.1.0)
 
-The source code can be downloaded from one of the following Apache release
+#### Getting a container image
 
+You can pull the latest AGE image by first installing docker on your machine and then from the command line.
 
+```
+docker pull joefagan/incubator-age
+```
+
+The overview readme at https://hub.docker.com/r/joefagan/incubator-age gives instructions on using the image to run and connect to AGE
+
+#### Getting Source Code
+Please note that this is the development link and that Apache makes no guarantees about the stability of the source code.
+
+The source code can be downloaded from the Apache Software Foundation Distribution Directory
 
 * [https://downloads.apache.org/incubator/age/](https://downloads.apache.org/incubator/age/)
 
 
 #### Github
 
-The source code can be downloaded from the master branch on Github. Please note that this is the development link and the Apache AGE makes no guarantees about the stability of the source code.
-
-
+The source code can also be downloaded from the master branch on Github. 
 
 * [https://github.com/apache/incubator-age](https://github.com/apache/incubator-age)
 
@@ -133,32 +339,24 @@ Install the following essential libraries according to each OS.
 Building AGE from source depends on the following Linux libraries (Ubuntu package names shown below):
 
 
-## CENTOS
-
+#### CENTOS
 
 ```
 $ yum install gcc glibc glib-common readline readline-devel zlib zlib-devel flex bison
 ```
 
-
-
-## Fedora
+#### Fedora
 
 
 ```
 $ dnf install gcc glibc bison flex readline readline-devel zlib zlib-devel
 ```
 
-
-
-## Ubuntu
-
+#### Ubuntu
 
 ```
 $ sudo apt-get install build-essential libreadline-dev zlib1g-dev flex bison
 ```
-
-
 
 ### Installation
 
@@ -177,30 +375,22 @@ If the path to your Postgres installation is not in the PATH variable, add the p
 $ make PG_CONFIG=/path/to/postgres/bin/pg_config install
 ```
 
-
-
 ### Post Installation
-
 
 #### Per Installation Instructions
 
-After the installation, run the CREATE EXTENSION command to have AGE be installed on the server.
+After the installation, run the CREATE EXTENSION command to install the extension into the current database.
 
 
 ```
 CREATE EXTENSION age; 
 ```
 
-
-
-#### Per Session Instructions \
-
-
+#### Per Session Instructions
 
 ```
 LOAD 'age';
 ```
-
 
 We recommend adding ag_catalog to your search_path to simplify your queries. The rest of this document will assume you have done so. If you do not, remember to add 'ag_catalog' to your cypher query function calls.
 
@@ -209,10 +399,7 @@ We recommend adding ag_catalog to your search_path to simplify your queries. The
 SET search_path = ag_catalog, "$user", public; 
 ```
 
-
-
 # Features
-
 
 ## Graphs
 
@@ -230,11 +417,9 @@ Syntax: `create_graph(graph_name);`
 
 Returns:
 
-
 ```
 void
 ```
-
 
 Arguments:
 
@@ -259,17 +444,14 @@ Considerations
 
 
 
-* This function will not return any results. However if there is not an error message the graph will be created.
+* This function will not return any results. The graph is created if there is no error message.
 * Tables needed to set up the graph are automatically created.
 
 Example:
 
-
 ```
 SELECT * FROM ag_catalog.create_graph('graph_name');
 ```
-
-
 
 ### Delete a Graph
 
@@ -282,11 +464,9 @@ Syntax: `drop_graph(graph_name, cascade);`
 
 Returns:
 
-
 ```
 void
 ```
-
 
 Arguments:
 
@@ -301,13 +481,13 @@ Arguments:
   <tr>
    <td>graph_name
    </td>
-   <td>Name of the graph to be created
+   <td>Name of the graph to be deleted
    </td>
   </tr>
   <tr>
    <td>cascade
    </td>
-   <td>A boolean that will not drop the graph if any data remains in the graph.
+   <td>A boolean that will will delete labels and data that depend on the graph.
    </td>
   </tr>
 </table>
@@ -317,22 +497,20 @@ Considerations:
 
 
 
-* This function will not return any results. However if there is not an error message the graph will be created.
+* This function will not return any results. If there is no error message the graph has been deleted.
 * It is recommended to set the cascade option to true, otherwise everything in the graph must be manually dropped with SQL DDL commands.
 
 Example:
-
 
 ```
 SELECT * FROM ag_catalog.drop_graph('graph_name', true);
 ```
 
-
-
 ### A Cypher Graph vs A Postgres Namespace
 
-Cypher uses a Postgres namespace for every individual graph. It is recommended that no DML or DDL commands are executed in the namespace that is reserved for the graph.
-
+Cypher uses a Postgres namespace for every individual graph. It is recommended that no DML or DDL commands are executed in the namespace that is reserved for the graph. 
+<!-- Needs clarification. Since search path is set as ag_catalog first in the searh path, all DML and DDL will happen in the ag_catalog namespace. Also should we say schema rather than namespace? 
+-->
 
 ## Data Types - An Introduction to agtype
 
@@ -371,6 +549,7 @@ Result:
   </tr>
   <tr>
    <td>
+    <br>
    </td>
   </tr>
   <tr>
@@ -386,9 +565,9 @@ Result:
 
 #### Integer
 
-The integer type stores whole numbers, i.e. numbers without fractional components. Integer data type is a 64-bit field that stores values between -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807. Attempts to store values outside of the allowed range will result in an error.
+The integer type stores whole numbers, i.e. numbers without fractional components. Integer data type is a 64-bit field that stores values from -9,223,372,036,854,775,808 to 9,223,372,036,854,775,807. Attempts to store values outside this range will result in an error.
 
-The type integer is the common choice, as it offers the best balance between range, storage size, and performance. The smallint type is generally only used if disk space is at a premium. The bigint type is designed to be used when the range of the integer type is insufficient.
+The type integer is the common choice, as it offers the best balance between range, storage size, and performance. The smallint type is generally used only if disk space is at a premium. The bigint type is designed to be used when the range of the integer type is insufficient.
 
 Input/Output Format
 
@@ -430,12 +609,11 @@ The data type float is an inexact, variable-precision numeric type, conforming t
 Inexact means that some values cannot be converted exactly to the internal format and are stored as approximations, so that storing and retrieving a value might show slight discrepancies. Managing these errors and how they propagate through calculations is the subject of an entire branch of mathematics and computer science and will not be discussed here, except for the following points:
 
 
+* If you require exact storage and calculations (such as for monetary amounts), use the numeric type instead.
 
-* If you require exact storage and calculations (such as for monetary amounts), use the numeric type instead. \
+* If you want to do complicated calculations with these types for anything important, especially if you rely on certain behavior in boundary cases (infinity, underflow), you should evaluate the implementation carefully.
 
-* If you want to do complicated calculations with these types for anything important, especially if you rely on certain behavior in boundary cases (infinity, underflow), you should evaluate the implementation carefully. \
-
-* Comparing two floating-point values for equality might not always work as expected. \
+* Comparing two floating-point values for equality might not always work as expected.
 
 
 Values that are too large or too small will cause an error. Rounding might take place if the precision of an input number is too high. Numbers too close to zero that are not representable as distinct from zero will cause an underflow error.
@@ -448,14 +626,18 @@ In addition to ordinary numeric values, the floating-point types have several sp
 * -Infinity
 * NaN
 
-These represent the IEEE 754 special values “infinity”, “negative infinity”, and “not-a-number”, respectively. When writing these values as constants in a Cypher command, you must put quotes around them and typecast them, for example SET x.float_value = '-Infinity'::float. On input, these strings are recognized in a case-insensitive manner.
+These represent the IEEE 754 special values “infinity”, “negative infinity”, and “not-a-number”, respectively. When writing these values as constants in a Cypher command, you must put quotes around them and typecast them, for example 
+```
+SET x.float_value = '-Infinity'::float
+```
+On input, these strings are recognized in a case-insensitive manner.
 
 
 ```
 Note
-IEEE754 specifies that NaN should not compare equal to any other floating-point value (including NaN). However, in order to allow floats to be sorted correctly, AGE evaluates 'NaN'::float = 'NaN':float to true. See the section Comparability and Equality for more details.
+IEEE754 specifies that NaN should not compare equal to any other floating-point value (including NaN). However, in order to allow floats to be sorted correctly, AGE evaluates 'NaN'::float = 'NaN'::float to true. See the section Comparability and Equality for more details.
 ```
-
+<!-- changed 'NaN':float to Nan::float -->
 
 Input/Output Format:
 
@@ -498,7 +680,7 @@ The type numeric can store numbers with a very large number of digits. It is esp
 
 We use the following terms below: The _precision_ of a numeric is the total count of significant digits in the whole number, that is, the number of digits to both sides of the decimal point. The _scale_ of a numeric is the count of decimal digits in the fractional part, to the right of the decimal point. So the number 23.5141 has a precision of 6 and a scale of 4. Integers can be considered to have a scale of zero.
 
-Without any precision or scale creates a column in which numeric values of any precision and scale can be stored, up to the implementation limit on precision. A column of this kind will not coerce input values to any particular scale, whereas numeric columns with a declared scale will coerce input values to that scale. (The SQL standard requires a default scale of 0, i.e., coercion to integer precision. We find this a bit useless. If you're concerned about portability, always specify the precision and scale explicitly.)
+Without any precision or scale creates a column in which numeric values of any precision and scale can be stored, up to the implementation limit on precision. <!-- fix above sentence --> A column of this kind will not coerce input values to any particular scale, whereas numeric columns with a declared scale will coerce input values to that scale. (The SQL standard requires a default scale of 0, i.e., coercion to integer precision. We find this a bit useless. If you're concerned about portability, always specify the precision and scale explicitly.)
 
 
 ```
@@ -511,12 +693,12 @@ If the scale of a value to be stored is greater than the declared scale of the c
 
 Numeric values are physically stored without any extra leading or trailing zeroes. Thus, the declared precision and scale of a column are maximums, not fixed allocations. (In this sense the numeric type is more akin to varchar(_n_) than to char(_n_).) The actual storage requirement is two bytes for each group of four decimal digits, plus three to eight bytes overhead.
 
-In addition to ordinary numeric values, the numeric type allows the special value NaN, meaning “not-a-number”. Any operation on NaN yields another NaN. When writing this value as a constant in an SQL command, you must put quotes around it, for example UPDATE table SET x = 'NaN'. On input, the string NaN is recognized in a case-insensitive manner.
+In addition to ordinary numeric values, the numeric type allows the special value NaN, meaning “not-a-number”. Any operation on NaN yields another NaN. When writing this value as a constant in an SQL command, you must put quotes around it, for example UPDATE table SET x = 'NaN'. 
 
 
 ```
 Note
-In most implementations of the "not-a-number" concept, NaN is not considered equal to any other numeric value (including NaN). However, in order to allow floats to be sorted correctly, AGE evaluates 'NaN'::numeric = 'NaN':numeric to true. See the section Comparability and Equality for more details.
+In most implementations of the "not-a-number" concept, NaN is considered not equal to any other numeric value (including NaN). However, in order to allow floats to be sorted correctly, AGE evaluates 'NaN'::numeric = 'NaN':numeric to true. See the section Comparability and Equality for more details.
 ```
 
 
@@ -1563,33 +1745,24 @@ The underlying conceptual model is complex and sometimes inconsistent. This lead
 The openCypher specification features four distinct concepts related to equality and ordering:
 
 
-## 
-    Comparability
-
+## Comparability
 
     Comparability is used by the inequality operators (>, &lt;, >=, &lt;=), and defines the underlying semantics of how to compare two values.
 
 
-## 
-    Equality
-
+## Equality
 
     Equality is used by the equality operators (=, &lt;>), and the list membership operator (IN). It defines the underlying semantics to determine if two values are the same in these contexts. Equality is also used implicitly by literal maps in node and relationship patterns, since such literal maps are merely a shorthand notation for equality predicates.
 
 
-## 
-    Orderability
-
+## Orderabilityy
 
     Orderability is used by the ORDER BY clause, and defines the underlying semantics of how to order values.
 
 
-## 
-    Equivalence
-
+## Equivalencee
 
     Equivalence is used by the DISTINCT modifier and by grouping in projection clauses (WITH,RETURN), and defines the underlying semantics to determine if two values are the same in these contexts.
-
 
 ### Comparability and equality
 
@@ -1644,6 +1817,7 @@ Entities
     * Expressed in terms of lists: 
 
         ```
+```
 p1 < p2
 <=> [n1, r1, n3] < [n1, r2, n2]
 <=> n1 < n1 || (n1 = n1 && [r1, n3] < [r2, n2])
@@ -3723,7 +3897,7 @@ Nothing is returned from this query.
 
 
 
-##  \
+## \\
 Create multiple vertices
 
 Creating multiple vertices is done by separating them with a comma.
@@ -9088,4 +9262,6 @@ Results:
    </td>
   </tr>
 </table>
+
+
 
