@@ -1559,18 +1559,38 @@ Result:
 
 
 <table>
-  <tr>
-   <td>v
-   </td>
-  </tr>
-  <tr>
-   <td>{"id": 0, "label": "label_name", "properties": {"i": 0}}::vertex
-   </td>
-  </tr>
-  <tr>
-   <td>(1 row)
-   </td>
-  </tr>
+   <tr>
+      <td>p
+      </td>
+   </tr>
+   <tr>
+      <td>[
+      </td>
+   </tr>
+   <tr>
+      <td>
+         {"id": 0, "label": "label_name_1", "properties": {"i": 0}}::vertex,
+      </td>
+   </tr>
+   <tr>
+      <td>
+         {"id": 2, "label": "edge_label", "end_id": 1, "start_id": 0, "properties": {"i": 0}}::edge, 
+      </td>
+   </tr>
+   <tr>
+      <td>
+         {"id": 1, "label": "label_name_2", "properties": {}}::vertex
+      </td>
+   </tr>
+   <tr>
+      <td>
+         ]::path
+      </td>
+   </tr>
+   <tr>
+      <td>(1 row)
+      </td>
+   </tr>
 </table>
 
 
@@ -4135,34 +4155,33 @@ $$) as (p agtype);
 This query creates three nodes and two relationships in one go, assigns it to a path variable, and returns it.
 
 Result
-
-
 <table>
-  <tr>
-   <td><strong>p</strong>
-   </td>
-  </tr>
-  <tr>
-   <td>[
-<p>
-    {id:0; label: ‘’; properties:{name:’Andres’}}::vertex,
-<p>
-    {id: 3; startid: 0, endid: 1; label: ‘WORKS_AT’; properties: {}}::edge,
-<p>
-    {id:1; label: ‘’; properties: {}}::vertex
-<p>
-    {id: 3; startid: 2, endid: 1; label: ‘WORKS_AT’; properties: {}}::edge,
-<p>
-    {id:2; label: ‘’; properties: {name:’Michael’}}::vertex
-<p>
-]::path
-   </td>
-  </tr>
-  <tr>
-   <td>(1 row)
-   </td>
-  </tr>
-</table>
+    <tr>
+       <td><strong>p</strong>
+       </td>
+    </tr>
+    <tr>
+       <td>
+          [{id:0; label: ‘’; properties:{name:’Andres’}}::vertex,
+       </td>
+    </tr>
+    <tr>
+       <td>{id: 3; startid: 0, endid: 1; label: ‘WORKS_AT’; properties: {}}::edge,</td>
+    </tr>
+    <tr>
+       <td>{id:1; label: ‘’; properties: {}}::vertex</td>
+    </tr>
+    <tr>
+       <td>{id: 3; startid: 2, endid: 1; label: ‘WORKS_AT’; properties: {}}::edge,</td>
+    </tr>
+    <tr>
+       <td>{id:2; label: ‘’; properties: {name:’Michael’}}::vertex]::path</td>
+    </tr>
+    <tr>
+       <td>(1 row)
+       </td>
+    </tr>
+ </table>
 
 
 
@@ -4747,28 +4766,22 @@ An agtype Map.
 
 Arguments:
 
-
 <table>
-  <tr>
-   <td>Name
-   </td>
-   <td>Description
-   </td>
-  </tr>
-  <tr>
-   <td>Expression
-   </td>
-   <td>An expression that returns a vertex, an edge, or an agtype map.
-<p>
-Considerations: properties(null) returns null.
-   </td>
-  </tr>
+   <tr>
+      <td>Name
+      </td>
+      <td>Description
+      </td>
+   </tr>
+   <tr>
+      <td>Expression
+      </td>
+      <td>An expression that returns a vertex, an edge, or an agtype map.
+      </td>
+   </tr>
 </table>
 
-
 Considerations: 
-
-
 
 * properties(null) returns null.
 
