@@ -632,11 +632,11 @@ SET x.float_value = '-Infinity'::float
 ```
 On input, these strings are recognized in a case-insensitive manner.
 
-
-```
+_
 Note
 IEEE754 specifies that NaN should not compare equal to any other floating-point value (including NaN). However, in order to allow floats to be sorted correctly, AGE evaluates 'NaN'::float = 'NaN'::float to true. See the section Comparability and Equality for more details.
-```
+_
+
 <!-- changed 'NaN':float to Nan::float -->
 
 Input/Output Format:
